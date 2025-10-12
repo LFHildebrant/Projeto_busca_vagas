@@ -1,0 +1,10 @@
+services:
+  mysql:
+    image: 'mysql:8.2'
+    environment:
+      - 'MYSQL_DATABASE=projeto_vagas_utfpr'
+      - 'MYSQL_USER=luiz'
+      - 'MYSQL_PASSWORD=12345'
+      - 'MYSQL_ALLOW_EMPTY_PASSWORD=yes'
+    ports:
+      - "3307:3306"
