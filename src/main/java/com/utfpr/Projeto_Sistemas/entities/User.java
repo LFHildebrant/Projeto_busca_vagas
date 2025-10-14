@@ -15,9 +15,9 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
-    private UUID idUser;
+    private int idUser;
 
     @Column(name = "name", nullable = false)
     @NotNull
@@ -59,8 +59,7 @@ public class User {
     public User() {
     }
 
-    public User(UUID idUser, String name, String username, String password, String email, String phone, String experience, String education) {
-        this.idUser = idUser;
+    public User(String name, String username, String password, String email, String phone, String experience, String education, Instant creationTimeStamp, Instant lastUpdateTimeStamp) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -68,13 +67,15 @@ public class User {
         this.phone = phone;
         this.experience = experience;
         this.education = education;
+        this.creationTimeStamp = creationTimeStamp;
+        this.lastUpdateTimeStamp = lastUpdateTimeStamp;
     }
 
-    public UUID getIdUser() {
+    public int getIdUser() {
         return idUser;
     }
 
-    public void setIdUser(UUID idUser) {
+    public void setIdUser(int idUser) {
         this.idUser = idUser;
     }
 
