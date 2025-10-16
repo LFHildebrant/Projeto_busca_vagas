@@ -6,18 +6,23 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
-    private int idUser;
+    private Integer idUser;
 
     @Column(name = "name", nullable = false)
     @NotNull
@@ -31,8 +36,6 @@ public class User {
 
     @Column(name = "password", nullable = false)
     @NotNull
-    @Size(min = 3, max = 20)
-    @Pattern(regexp = "^([0-9a-zA-Z]{3,20})$")
     private String password;
 
     @Column(name = "email", nullable = true)
@@ -56,10 +59,14 @@ public class User {
     @Column(name = "last_update_time_stamp")
     private Instant lastUpdateTimeStamp;
 
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     public User() {
     }
 
-    public User(String name, String username, String password, String email, String phone, String experience, String education, Instant creationTimeStamp, Instant lastUpdateTimeStamp) {
+    public User(String name, String username, String password, String email, String phone, String experience, String education, Instant creationTimeStamp, Instant lastUpdateTimeStamp, Role role) {
         this.name = name;
         this.username = username;
         this.password = password;
@@ -69,6 +76,7 @@ public class User {
         this.education = education;
         this.creationTimeStamp = creationTimeStamp;
         this.lastUpdateTimeStamp = lastUpdateTimeStamp;
+        this.role = role;
     }
 
     public int getIdUser() {
@@ -83,6 +91,14 @@ public class User {
         return name;
     }
 
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -91,8 +107,33 @@ public class User {
         return username;
     }
 
+    @Override
+    public boolean isAccountNonExpired() {
+        return true ;//UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true; //UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true; // UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true; //return UserDetails.super.isEnabled();
+    }
+
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(Role.USER.getRole()));
     }
 
     public String getPassword() {
