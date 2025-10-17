@@ -78,6 +78,16 @@ public class User implements UserDetails {
         this.lastUpdateTimeStamp = lastUpdateTimeStamp;
         this.role = role;
     }
+    public User(String name, String password, String email, String phone, String experience, String education, Instant lastUpdateTimeStamp, Role role) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.experience = experience;
+        this.education = education;
+        this.lastUpdateTimeStamp = lastUpdateTimeStamp;
+        this.role = role;
+    }
 
     public int getIdUser() {
         return idUser;

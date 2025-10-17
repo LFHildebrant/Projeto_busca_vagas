@@ -10,5 +10,6 @@ public interface UserRepositoy extends JpaRepository<User, Integer> {
 
     UserDetails findByUsername(String username);
     UserDetails findByIdUser(Long idUser);
-
+    Boolean existsByIdUser(Long idUser);
+    Integer deleteUserByIdUser(Integer idUser);
 }

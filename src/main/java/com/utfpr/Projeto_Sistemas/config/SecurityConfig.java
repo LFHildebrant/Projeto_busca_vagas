@@ -36,15 +36,8 @@ public class SecurityConfig  {
                 //.cors(cors -> {})
                 .logout(logout -> logout.disable()) //disable the native logout from spring, it's conflicting with the route /logout
                 .authorizeHttpRequests(authorize -> authorize
-                        //.requestMatchers(HttpMethod.POST, "/login").hasRole("USER");
-                        //.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
-                        //.requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        //.anyRequest().authenticated()
-                        //.requestMatchers("/users").permitAll()
                         .requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        //.requestMatchers("/users/**").permitAll()
-
                         .requestMatchers(HttpMethod.OPTIONS, "/login").permitAll()  // pré-flight
                         .requestMatchers(HttpMethod.OPTIONS, "/users").permitAll()       // pré-flight
                         .anyRequest().authenticated()

@@ -10,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
+import javax.naming.AuthenticationException;
 import java.time.Instant;
 
 @RestController
@@ -23,19 +24,20 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody @Valid AuthenticationDto authenticationDto){
-        var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDto.username(),authenticationDto.password());
-        var auth = authenticationManager.authenticate(usernamePassword);
-
-        var token = tokenService.generateToken((User) auth.getPrincipal());
-
-        return ResponseEntity.status(200).body(token);
-
+        try {
+            var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDto.username(), authenticationDto.password());
+            var auth = authenticationManager.authenticate(usernamePassword);
+            var token = tokenService.generateToken((User) auth.getPrincipal());
+            return ResponseEntity.status(200).body(token);
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body(new ApiResponse("Invalid credentials"));
+        }
     }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logout (@RequestHeader("Authorization") String tokenHeader){
-        if (tokenService.verifyToken(tokenHeader)){  //verify received token
-            ResponseEntity.status(403).body(new ApiResponse("Invalid Token"));
+        if (!tokenService.verifyToken(tokenHeader)){  //verify received token
+            return ResponseEntity.status(403).body(new ApiResponse("Invalid Token"));
         }
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         Instant removed = tokenService.removeToken(tokenCleaned);

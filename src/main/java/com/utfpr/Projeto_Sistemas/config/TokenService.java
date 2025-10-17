@@ -57,9 +57,9 @@ public class TokenService {
 
     public boolean verifyToken(String token) {
         if (token == null || !token.startsWith("Bearer ")){  //verify received token
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     public String replaceToken (String token) {
