@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -34,17 +37,38 @@ public class SecurityConfig  {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 //.cors(cors -> {})
+                .cors(Customizer.withDefaults())
                 .logout(logout -> logout.disable()) //disable the native logout from spring, it's conflicting with the route /logout
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                        /*.requestMatchers(HttpMethod.POST, "/login").permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/login").permitAll()  // pré-flight
                         .requestMatchers(HttpMethod.OPTIONS, "/users").permitAll()       // pré-flight
-                        .anyRequest().authenticated()
+                        .requestMatchers(HttpMethod.GET, "/user").hasRole("USER")
+                        .requestMatchers(HttpMethod.PATCH, "/user/**").hasRole("USER")
+                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("USER")
+                        .anyRequest().authenticated()*/
 
+                        .requestMatchers(HttpMethod.POST, "/login", "/users").permitAll() // public routes
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // pré-flight global
+
+                        .requestMatchers("/user/**").hasRole("USER")  // private routes
+
+                        .anyRequest().authenticated()  // any other who needs authentication
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PATCH", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean

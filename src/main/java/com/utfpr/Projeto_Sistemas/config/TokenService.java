@@ -29,6 +29,8 @@ public class TokenService {
                 .withIssuer("auth_api")
                 .withSubject(String.valueOf(user.getIdUser()))
                 .withExpiresAt(genExpirationDate())
+                .withClaim("username", user.getUsername())
+                .withClaim("role", user.getRole().getRole())
                 .sign(algorithm);
         tokenWhitelist.add(token, genExpirationDate());
         return new TokenResponse(token, String.valueOf(genExpirationDate()));
@@ -67,6 +69,7 @@ public class TokenService {
     }
 
     private Instant genExpirationDate() {
+
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }

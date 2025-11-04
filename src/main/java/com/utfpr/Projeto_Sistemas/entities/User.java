@@ -42,7 +42,7 @@ public class User implements UserDetails {
     private String email;
 
     @Column(name = "phone", nullable = true)
-    @Pattern(regexp = "^(([1-9]{2})|[1-9]{2})9?[1-9]{4}-?[1-9]{4}$")
+    @Pattern(regexp = "^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$")
     private String phone;
 
     @Column(name = "experience", nullable = true)
@@ -87,6 +87,11 @@ public class User implements UserDetails {
         this.education = education;
         this.lastUpdateTimeStamp = lastUpdateTimeStamp;
         this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.getRole().toUpperCase()));
     }
 
     public int getIdUser() {
@@ -139,11 +144,6 @@ public class User implements UserDetails {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(Role.USER.getRole()));
     }
 
     public String getPassword() {

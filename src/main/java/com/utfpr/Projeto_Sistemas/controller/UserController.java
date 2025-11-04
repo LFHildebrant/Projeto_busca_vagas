@@ -1,15 +1,19 @@
 package com.utfpr.Projeto_Sistemas.controller;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
+import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
 import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
 import com.utfpr.Projeto_Sistemas.service.UserService;
 import com.utfpr.Projeto_Sistemas.utilities.VerificarionMethods;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.time.Clock;
 
 
@@ -47,11 +51,6 @@ public class UserController {
         return null;
     }
 
-    @GetMapping("/todos")
-    public String getTodos(){
-        return "Todos aqui em ";
-    }
-
     @GetMapping("/{user_id}")
     public ResponseEntity<?> getUser(@RequestHeader ("Authorization") String tokenHeader, @PathVariable int user_id){
         ResponseEntity<?> response = null;
@@ -81,7 +80,7 @@ public class UserController {
         CreateUserDto userDto = new CreateUserDto(createUserDto.username(), encryptedPassword, createUserDto.email(), createUserDto.name(), createUserDto.phone(), createUserDto.experience(), createUserDto.education());
         boolean created = userService.updateUser(userDto, idUser);
         if (created) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Created"));
+            return ResponseEntity.status(200).body(new ApiResponse("Updated"));
         } else {
             ResponseEntity.status(500).body("Error while saving: ");
         }
@@ -94,12 +93,26 @@ public class UserController {
         if (response!=null){
             return response;
         }
+
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
         int deleted = userService.deleteUser(idUser);
         if (deleted > 0) {
+            TokenWhitelist tokenWhitelist = new TokenWhitelist();
+            tokenWhitelist.remove(tokenCleaned);
             return ResponseEntity.status(200).body(new ApiResponse("Deleted"));
         }
         return ResponseEntity.status(500).body("Error while deleting: ");
+    }
+
+    @ExceptionHandler(SQLException.class)
+    public ResponseEntity<String> handleSQLError(SQLException e, HttpServletRequest req) {
+        ApiResponse bodyData = new ApiResponse("Username already exists");
+
+        HttpHeaders header = new HttpHeaders();
+        header.set("Status",String.valueOf(HttpStatus.CONFLICT.value()));
+        ResponseEntity<String> response = new ResponseEntity<>(bodyData.toString(),header,HttpStatus.CONFLICT);
+        System.out.println("Response sent:"+ response);
+        return response;
     }
 }

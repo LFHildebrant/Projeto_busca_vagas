@@ -33,7 +33,7 @@ public class UserService {
     public boolean createUser(CreateUserDto createUserDto) {
         //userDto -> user
         var Entity = new User(
-                createUserDto.name(),
+                createUserDto.name().toUpperCase(),
                 createUserDto.username(),
                 createUserDto.password(),
                 createUserDto.email(),
@@ -52,7 +52,7 @@ public class UserService {
     public boolean updateUser(CreateUserDto createUserDto, Long idUser) {
         User existingUser = (User) userRepositoy.findByIdUser(idUser);
 
-        existingUser.setName(createUserDto.name());
+        existingUser.setName(createUserDto.name().toUpperCase());
         existingUser.setPassword(createUserDto.password());  //get the user from db, then put the new data on the user and save
         existingUser.setEmail(createUserDto.email());
         existingUser.setPhone(createUserDto.phone());

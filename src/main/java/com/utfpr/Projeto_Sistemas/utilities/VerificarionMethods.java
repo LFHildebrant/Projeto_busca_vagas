@@ -75,8 +75,9 @@ public class VerificarionMethods {
         }
         //phone regex
         if (createUserDto.phone() != null && !createUserDto.phone().isEmpty()) {
-            if (!createUserDto.email().matches("^(([1-9]{2})|[1-9]{2})9?[1-9]{4}-?[1-9]{4}$")){
-                errorMessage.getDetails().add(new FieldMessage("phone", "invalid phone"));
+            System.out.print(createUserDto.phone());
+            if (!createUserDto.phone().matches("^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$")){
+                errorMessage.getDetails().add(new FieldMessage("phone", "invalid phone: Must be empty or (XX)XXXXX-XXXX"));
             }
         }
         //experience length
@@ -126,7 +127,7 @@ public class VerificarionMethods {
         }
         //phone regex
         if (createUserDto.phone() != null && !createUserDto.phone().isEmpty()) {
-            if (!createUserDto.email().matches("^(([1-9]{2})|[1-9]{2})9?[1-9]{4}-?[1-9]{4}$")){
+            if (!createUserDto.phone().matches("^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$")){
                 errorMessage.getDetails().add(new FieldMessage("phone", "invalid phone"));
             }
         }
