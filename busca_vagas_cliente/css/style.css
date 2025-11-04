@@ -1,0 +1,22 @@
+.hide {
+    display: none;
+}
+
+.feedback {
+
+}
+
+.logout{
+    width: 50px;
+    height: 50px;
+}
+
+.logout:hover{
+    opacity: 50%;
+}
+
+.disable{
+    background-color: #ddd;
+    color: #555;
+    cursor: not-allowed;
+}
