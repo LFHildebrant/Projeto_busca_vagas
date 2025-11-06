@@ -33,16 +33,17 @@ public class CompanyController {
 
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(result.getAllErrors());
-        }
+        } //else if (verificarionMethods.VerificarionUserExists(createCompanyDto.username()) != null){
+            //return ResponseEntity.status(409).body(new ApiResponse("username already exists"));
+        //}
         String encryptedPassword = new BCryptPasswordEncoder().encode(createCompanyDto.password());
         CreateCompanyDto companyDto = new CreateCompanyDto(createCompanyDto.username(), encryptedPassword, createCompanyDto.email(), createCompanyDto.name(), createCompanyDto.business(), createCompanyDto.phone(), createCompanyDto.street(), createCompanyDto.city(), createCompanyDto.state(), createCompanyDto.number());
         boolean created = companyService.createUser(companyDto);
         if (created) {
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Created"));
         } else {
-            ResponseEntity.status(500).body("Error while saving: ");
+            return ResponseEntity.status(500).body("Error while saving: ");
         }
-        return null;
     }
 
     @GetMapping("/{company_id}")

@@ -27,7 +27,7 @@ public class Company implements UserDetails {
     @Column(name = "id_company")
     private Integer idCompany;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     @NotBlank(message = "Name can not be empty")
     @Size(min = 4, max = 150, message = "name must be between 4 and 150 characters")
     private String name;

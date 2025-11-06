@@ -1,4 +1,4 @@
-import { UserService } from "./userService.js";
+import { CompanyService } from "./companyService.js";
 
 class CreateUserView{
     constructor(){
@@ -9,19 +9,22 @@ class CreateUserView{
         this.inputPassword = document.getElementById("password");
         this.inputEmail = document.getElementById("email");
         this.inputPhone = document.getElementById("phone");
-        this.inputExperience = document.getElementById("experience");
-        this.inputEducation = document.getElementById("education");
+        this.inputBusiness = document.getElementById("business");
+        this.inputStreet = document.getElementById("street");
+        this.inputNumber = document.getElementById("number");
+        this.inputCity = document.getElementById("city");
+        this.inputState = document.getElementById("state");
         this.buttonSubmit = document.getElementById("buttonSubmit");
         this.userForm = document.getElementById("userForm");
         this.buttonDelete = document.getElementById("buttonDelete");
 
-        this.userForm.addEventListener("submit", this.handleSubmitCreate.bind(this));
+        this.userForm.addEventListener("submit", this.handleSubmitUpdate.bind(this));
     }
 
-    async handleSubmitCreate(event){
+    async handleSubmitUpdate(event){
         event.preventDefault();
-        const userService = new UserService();
-        const fields = ["name", "username", "password", "phone", "email", "experience", "education"];
+        const companyService = new CompanyService();
+        const fields = ["name", "username", "password", "phone", "email", "business", "street", "number", "city", "state"];
 
         const user = {};
 
@@ -33,7 +36,7 @@ class CreateUserView{
         });
 
         try{
-            const result = await userService.createUser(user);
+            const result = await companyService.createCompany(user);
 
             this.message.style.color = "green";
             this.message.textContent = "Sucesso! -> " + result.message + " REDIRECIONANDO....";         

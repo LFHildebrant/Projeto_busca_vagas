@@ -1,5 +1,5 @@
 export class Config{
-    static BASE_URL = "http://localhost:20000";
+    static BASE_URL = "http://localhost:21000";
 
     static getId(token){
         if (token){
@@ -9,6 +9,15 @@ export class Config{
             const userId = decodedPayload.userId || decodedPayload.sub; 
             return userId;
         }
-        
+    }
+
+    static getRole(token){
+        if (token){
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const decodedPayload = JSON.parse(atob(base64));
+            const userRole = decodedPayload.userRole || decodedPayload.role; 
+            return userRole;
+        }
     }
 }

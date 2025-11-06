@@ -21,6 +21,7 @@ class LoginView{
                 localStorage.setItem("token", token);
                 
                 const userId = Config.getId(token);
+                const userRole = Config.getRole(token);
                 
                 localStorage.setItem("id", userId);
 
@@ -28,7 +29,11 @@ class LoginView{
                 this.messageEl.style.color = "green";
                 this.messageEl.textContent = "Login OK. Redirecionando...";
                 setTimeout(() => {
+                    if (userRole.toLowerCase() == "user"){
                     window.location.href = "user_home.html";
+                    } else {
+                        window.location.href = "company_home.html";
+                    }
                 }, 1000)
                 
             }

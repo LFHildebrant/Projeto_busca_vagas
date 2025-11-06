@@ -1,6 +1,7 @@
 package com.utfpr.Projeto_Sistemas.utilities;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
+import com.utfpr.Projeto_Sistemas.controller.CreateCompanyDto;
 import com.utfpr.Projeto_Sistemas.controller.CreateUserDto;
 import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.entities.UserDto;
@@ -41,6 +42,19 @@ public class VerificarionMethods {
         }
         if (idUser != user_id){
             return ResponseEntity.status(403).body(new ApiResponse("Forbidden"));
+        }
+        return null;
+    }
+
+    public ResponseEntity<?> VerificarionUserExists(String username){
+        if (this.userService.getUserByUsername(username)  != null ) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("username already exists"));
+        }
+        return null;
+    }
+    public ResponseEntity<?> VerificarionNameExists(String username){
+        if (this.userService.getUserByUsername(username)  != null ) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("username already exists"));
         }
         return null;
     }

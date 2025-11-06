@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <script type="module" src="js/createUserView.js" defer></script>
+    <script type="module" src="js/createCompanyView.js" defer></script>
     <title>Document</title>
 </head>
 <body>
@@ -13,9 +13,9 @@
         <div id="message"></div>
         <div>
             <form id="userForm">
-                <h3>Cadastro de Usuário</h3>
+                <h3>Cadastro de Empresa</h3>
 
-                <label for="name">Nome completo</label>
+                <label for="name">Nome</label>
                 <input type="text" id="name" name="name" required>
 
                 <label for="username">Usuário</label>
@@ -30,19 +30,23 @@
                 <label for="phone">Telefone</label>
                 <input type="tel" id="phone" name="phone">
 
-                <label for="experience">Experiência</label>
-                <textarea id="experience" name="experience" rows="3"></textarea>
+                <label for="business">Área de negócio</label>
+                <input type="business" id="business" name="business">
 
-                <label for="education">Educação</label>
-                <textarea id="education" name="education" rows="3"></textarea>
+                <label for="street">Rua</label>
+                <input type="street" id="street" name="street">
+
+                <label for="number">Número</label>
+                <input type="number" id="number" name="number">
+
+                <label for="city">Cidade</label>
+                <input type="city" id="city" name="city">
+
+                <label for="state">Estado</label>
+                <input type="state" id="state" name="state">
 
                 <button id="buttonSubmit" type="submit">Cadastrar</button>
             </form>
-        </div>
-        <div>
-            <a href="company_create.html">
-                <p>Sou empresa</p>
-            </a>
         </div>
     </div>
 </body>
