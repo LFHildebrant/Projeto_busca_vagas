@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,8 +29,13 @@ import java.util.List;
 @Order(1)
 public class SecurityConfig  {
 
-    @Autowired
+
     SecurityFilter securityFilter;
+
+    @Autowired
+    public SecurityConfig(SecurityFilter securityFilter) {
+        this.securityFilter = securityFilter;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception {
@@ -40,19 +46,10 @@ public class SecurityConfig  {
                 .cors(Customizer.withDefaults())
                 .logout(logout -> logout.disable()) //disable the native logout from spring, it's conflicting with the route /logout
                 .authorizeHttpRequests(authorize -> authorize
-                        /*.requestMatchers(HttpMethod.POST, "/login").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/users").permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/login").permitAll()  // pré-flight
-                        .requestMatchers(HttpMethod.OPTIONS, "/users").permitAll()       // pré-flight
-                        .requestMatchers(HttpMethod.GET, "/user").hasRole("USER")
-                        .requestMatchers(HttpMethod.PATCH, "/user/**").hasRole("USER")
-                        .requestMatchers(HttpMethod.DELETE, "/user/**").hasRole("USER")
-                        .anyRequest().authenticated()*/
-
-                        .requestMatchers(HttpMethod.POST, "/login", "/users").permitAll() // public routes
+                        .requestMatchers(HttpMethod.POST, "/login", "/users", "/companies").permitAll() // public routes
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // pré-flight global
-
                         .requestMatchers("/user/**").hasRole("USER")  // private routes
+                        //.requestMatchers("/companies/**").hasRole("COMPANY")  // private routes
 
                         .anyRequest().authenticated()  // any other who needs authentication
                 )
@@ -81,16 +78,4 @@ public class SecurityConfig  {
         return new BCryptPasswordEncoder();
     }
 
-    /*@Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("*")); // libera todas as origens (ou especifique: "http://localhost:3000")
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
-        configuration.setAllowCredentials(true);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }*/
 }

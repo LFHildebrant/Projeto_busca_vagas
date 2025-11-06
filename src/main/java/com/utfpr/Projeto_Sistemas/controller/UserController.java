@@ -7,6 +7,7 @@ import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
 import com.utfpr.Projeto_Sistemas.service.UserService;
 import com.utfpr.Projeto_Sistemas.utilities.VerificarionMethods;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,7 @@ public class UserController {
     private final TokenService tokenService;
     private final VerificarionMethods verificarionMethods;
 
+    @Autowired
     public UserController(UserService userService, UserRepositoy userRepositoy, TokenService tokenService, VerificarionMethods verificarionMethods) {
         this.userService = userService;
         this.userRepositoy = userRepositoy;

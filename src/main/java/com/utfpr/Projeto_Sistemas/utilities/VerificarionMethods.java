@@ -4,6 +4,7 @@ import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.controller.CreateUserDto;
 import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.entities.UserDto;
+import com.utfpr.Projeto_Sistemas.service.CompanyService;
 import com.utfpr.Projeto_Sistemas.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +18,12 @@ public class VerificarionMethods {
 
     private final TokenService tokenService;
     private final UserService userService;
+    private final CompanyService companyService;
 
-    public VerificarionMethods(TokenService tokenService, UserService userService) {
+    public VerificarionMethods(TokenService tokenService, UserService userService, CompanyService companyService) {
         this.tokenService = tokenService;
         this.userService = userService;
+        this.companyService = companyService;
     }
 
     public ResponseEntity<?> verifyTokenInvalidForbiddenUsernotFound(String tokenHeader, int user_id){
@@ -31,8 +34,10 @@ public class VerificarionMethods {
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned)); //idUser from token
         System.out.println("exists? " + userService.existsUserById(idUser));
         if (!userService.existsUserById(idUser)){
-            System.out.println("exists? " + userService.existsUserById(idUser));
-            return ResponseEntity.status(404).body(new ApiResponse("User not found"));
+            if (!companyService.existsCompanyById(idUser)){
+                System.out.println("exists? " + userService.existsUserById(idUser));
+                return ResponseEntity.status(404).body(new ApiResponse("User not found"));
+            }
         }
         if (idUser != user_id){
             return ResponseEntity.status(403).body(new ApiResponse("Forbidden"));
@@ -148,5 +153,4 @@ public class VerificarionMethods {
         }
         return ResponseEntity.status(422).body(errorMessage);
     }
-
 }

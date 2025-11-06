@@ -11,9 +11,15 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class FieldMessage {
 
+    private Integer Status;
     private String field;
-    private String error;
+    private Object error;
+    private String message;
 
     public FieldMessage() {
+    }
+    public FieldMessage(String field,  String message) {
+        this.field = field;
+        this.message = message;
     }
 }

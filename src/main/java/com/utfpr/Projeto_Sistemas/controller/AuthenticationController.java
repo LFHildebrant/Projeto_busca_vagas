@@ -1,5 +1,6 @@
 package com.utfpr.Projeto_Sistemas.controller;
 
+//import com.utfpr.Projeto_Sistemas.config.CustomUserDetails;
 import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.entities.User;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.AuthenticationException;
@@ -27,10 +29,10 @@ public class AuthenticationController {
         try {
             var usernamePassword = new UsernamePasswordAuthenticationToken(authenticationDto.username(), authenticationDto.password());
             var auth = authenticationManager.authenticate(usernamePassword);
-            var token = tokenService.generateToken((User) auth.getPrincipal());
+            var token = tokenService.generateToken((UserDetails) auth.getPrincipal());
             return ResponseEntity.status(200).body(token);
         } catch (Exception e) {
-            return ResponseEntity.status(404).body(new ApiResponse("Invalid credentials"));
+            return ResponseEntity.status(404).body(e);//new ApiResponse("Invalid credentials"));
         }
     }
 

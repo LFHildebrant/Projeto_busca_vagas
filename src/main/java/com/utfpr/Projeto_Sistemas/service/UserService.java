@@ -72,6 +72,7 @@ public class UserService {
     public Integer deleteUser(Long idUser){
         Integer result = userRepositoy.deleteUserByIdUser(Math.toIntExact(idUser));
         userRepositoy.flush(); // sync db
-        return result;    }
+        return result;
+    }
 }
 

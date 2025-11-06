@@ -1,5 +1,6 @@
 package com.utfpr.Projeto_Sistemas.config;
 
+import com.utfpr.Projeto_Sistemas.repository.CompanyRepository;
 import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,12 +21,14 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final TokenService tokenService;
     private final UserRepositoy  userRepositoy;
+    private final CompanyRepository companyRepository;
     private final TokenWhitelist tokenWhitelist;
 
-    public SecurityFilter(TokenService tokenService, UserRepositoy userRepositoy, TokenWhitelist tokenWhitelist) {
+    public SecurityFilter(TokenService tokenService, UserRepositoy userRepositoy, TokenWhitelist tokenWhitelist, CompanyRepository companyRepository) {
         this.tokenService = tokenService;
         this.userRepositoy = userRepositoy;
         this.tokenWhitelist = tokenWhitelist;
+        this.companyRepository = companyRepository;
     }
 
     @Override
@@ -35,11 +38,20 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             if (tokenWhitelist.exists(token)) {
                 Long idUser = Long.parseLong(tokenService.validateToken(token));
-
-                UserDetails user = userRepositoy.findByIdUser(idUser);
-                if (user == null) {
-                    return;
+                String role = tokenService.getRoleFromToken(token);
+                UserDetails user = null;
+                if (role.equalsIgnoreCase("USER")) {
+                    user = userRepositoy.findByIdUser(idUser);
+                    if (user == null) {
+                        return;
+                    }
+                } else if (role.equalsIgnoreCase("COMPANY")) {
+                    user = companyRepository.findByIdCompany(idUser);
+                    if (user == null) {
+                        return;
+                    }
                 }
+
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
