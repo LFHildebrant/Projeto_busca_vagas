@@ -72,7 +72,7 @@ public class UserController {
         if (response!=null){
             return response;
         }
-        response = verificarionMethods.VerificationUserFieldUpdate(createUserDto);
+        response = verificarionMethods.verificationUserFieldUpdate(createUserDto);
         if (response != null) {
             return response;
         }

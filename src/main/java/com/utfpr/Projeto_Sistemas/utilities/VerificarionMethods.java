@@ -26,7 +26,6 @@ public class VerificarionMethods {
         this.userService = userService;
         this.companyService = companyService;
     }
-
     public ResponseEntity<?> verifyTokenInvalidForbiddenUsernotFound(String tokenHeader, int user_id){
         if (!tokenService.verifyToken(tokenHeader)){  //verify received token
             return ResponseEntity.status(401).body(new ApiResponse("Invalid Token"));
@@ -64,51 +63,51 @@ public class VerificarionMethods {
         ValidationErrorMessage errorMessage = new ValidationErrorMessage();
         errorMessage.setMessage("Validation Error");
         errorMessage.setCode("UNPROCESSABLE");  //Message creation
-        errorMessage.setDetails(new ArrayList<FieldMessage>());
+        errorMessage.setDetails(new ArrayList<FieldError>());
 
         //username null / username regex / username already exists
         if (createUserDto.username() == null || createUserDto.username().isEmpty()) {
-            errorMessage.getDetails().add(new FieldMessage("username", "username is required"));
+            errorMessage.getDetails().add(new FieldError("username", "username is required"));
         } else if (!createUserDto.username().matches("^[0-9a-zA-Z]{3,20}$")) {
-            errorMessage.getDetails().add(new FieldMessage("username", "invalid_format"));
+            errorMessage.getDetails().add(new FieldError("username", "invalid_format"));
         } else if (this.userService.getUserByUsername(createUserDto.username())  != null ) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("username already exists"));
         }
         //name null / name length
         if (createUserDto.name() == null || createUserDto.name().isEmpty()) {
-            errorMessage.getDetails().add(new FieldMessage("name", "name is required"));
+            errorMessage.getDetails().add(new FieldError("name", "name is required"));
         } else if (createUserDto.name().length() < 4 || createUserDto.name().length() > 150) {
-            errorMessage.getDetails().add(new FieldMessage("name", "name must be between 4 and 150 characters"));
+            errorMessage.getDetails().add(new FieldError("name", "name must be between 4 and 150 characters"));
         }
         //password null / regex
         if (createUserDto.password() == null || createUserDto.password().isEmpty()) {
-            errorMessage.getDetails().add(new FieldMessage("password", "password is required"));
+            errorMessage.getDetails().add(new FieldError("password", "password is required"));
         }else if (!createUserDto.password().matches("^[0-9a-zA-Z]{3,20}$")) {
-            errorMessage.getDetails().add(new FieldMessage("password", "invalid_format"));
+            errorMessage.getDetails().add(new FieldError("password", "invalid_format"));
         }
         //email regex
         if (createUserDto.email() != null && !createUserDto.email().isEmpty()) {
             if (!createUserDto.email().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")){
-                errorMessage.getDetails().add(new FieldMessage("email", "invalid email"));
+                errorMessage.getDetails().add(new FieldError("email", "invalid email"));
             }
         }
         //phone regex
         if (createUserDto.phone() != null && !createUserDto.phone().isEmpty()) {
             System.out.print(createUserDto.phone());
             if (!createUserDto.phone().matches("^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$")){
-                errorMessage.getDetails().add(new FieldMessage("phone", "invalid phone: Must be empty or (XX)XXXXX-XXXX"));
+                errorMessage.getDetails().add(new FieldError("phone", "invalid phone: Must be empty or (XX)XXXXX-XXXX"));
             }
         }
         //experience length
         if (createUserDto.experience() != null && !createUserDto.experience().isEmpty()) {
             if (createUserDto.experience().length() < 10 || createUserDto.experience().length() > 600){
-                errorMessage.getDetails().add(new FieldMessage("experience", "experience must be between 10 and 600 characters"));
+                errorMessage.getDetails().add(new FieldError("experience", "experience must be between 10 and 600 characters"));
             }
         }
         //education length
         if (createUserDto.education() != null && !createUserDto.education().isEmpty()) {
             if (createUserDto.education().length() < 10 || createUserDto.education().length() > 600){
-                errorMessage.getDetails().add(new FieldMessage("education", "education must be between 10 and 600 characters"));
+                errorMessage.getDetails().add(new FieldError("education", "education must be between 10 and 600 characters"));
             }
         }
         if (errorMessage.getDetails().isEmpty()){
@@ -117,49 +116,56 @@ public class VerificarionMethods {
         return ResponseEntity.status(422).body(errorMessage);
     }
 
-    public ResponseEntity<?> VerificationUserFieldUpdate(CreateUserDto createUserDto) {
+    public ResponseEntity<?> updateUsername(CreateCompanyDto createCompanyDto) {
+        if (createCompanyDto.username() != null && !createCompanyDto.username().isEmpty()) {
+            return ResponseEntity.status(422).body(new ApiResponse("cannot change username"));
+        }
+        return null;
+    }
+
+    public ResponseEntity<?> verificationUserFieldUpdate(CreateUserDto createUserDto) {
         ValidationErrorMessage errorMessage = new ValidationErrorMessage();
         errorMessage.setMessage("Validation Error");
         errorMessage.setCode("UNPROCESSABLE");  //Message creation
-        errorMessage.setDetails(new ArrayList<FieldMessage>());
+        errorMessage.setDetails(new ArrayList<FieldError>());
 
         if (createUserDto.username() != null && !createUserDto.username().isEmpty()) {
-            errorMessage.getDetails().add(new FieldMessage("username", "can not change username"));
+            errorMessage.getDetails().add(new FieldError("username", "can not change username"));
         }
         //name null / name length
         if (createUserDto.name() == null || createUserDto.name().isEmpty()) {
-            errorMessage.getDetails().add(new FieldMessage("name", "name is required"));
+            errorMessage.getDetails().add(new FieldError("name", "name is required"));
         } else if (createUserDto.name().length() < 4 || createUserDto.name().length() > 150) {
-            errorMessage.getDetails().add(new FieldMessage("name", "name must be between 4 and 150 characters"));
+            errorMessage.getDetails().add(new FieldError("name", "name must be between 4 and 150 characters"));
         }
         //password null / regex
         if (createUserDto.password() == null || createUserDto.password().isEmpty()) {
-            errorMessage.getDetails().add(new FieldMessage("password", "password is required"));
+            errorMessage.getDetails().add(new FieldError("password", "password is required"));
         }else if (!createUserDto.password().matches("^[0-9a-zA-Z]{3,20}$")) {
-            errorMessage.getDetails().add(new FieldMessage("password", "invalid_format"));
+            errorMessage.getDetails().add(new FieldError("password", "invalid_format"));
         }
         //email regex
         if (createUserDto.email() != null && !createUserDto.email().isEmpty()) {
             if (!createUserDto.email().matches("^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")){
-                errorMessage.getDetails().add(new FieldMessage("email", "invalid email"));
+                errorMessage.getDetails().add(new FieldError("email", "invalid email"));
             }
         }
         //phone regex
         if (createUserDto.phone() != null && !createUserDto.phone().isEmpty()) {
             if (!createUserDto.phone().matches("^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$")){
-                errorMessage.getDetails().add(new FieldMessage("phone", "invalid phone"));
+                errorMessage.getDetails().add(new FieldError("phone", "invalid phone"));
             }
         }
         //experience length
         if (createUserDto.experience() != null && !createUserDto.experience().isEmpty()) {
             if (createUserDto.experience().length() < 10 || createUserDto.experience().length() > 600){
-                errorMessage.getDetails().add(new FieldMessage("experience", "experience must be between 10 and 600 characters"));
+                errorMessage.getDetails().add(new FieldError("experience", "experience must be between 10 and 600 characters"));
             }
         }
         //education length
         if (createUserDto.education() != null && !createUserDto.education().isEmpty()) {
             if (createUserDto.education().length() < 10 || createUserDto.education().length() > 600){
-                errorMessage.getDetails().add(new FieldMessage("education", "education must be between 10 and 600 characters"));
+                errorMessage.getDetails().add(new FieldError("education", "education must be between 10 and 600 characters"));
             }
         }
         if (errorMessage.getDetails().isEmpty()){

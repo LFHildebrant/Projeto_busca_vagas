@@ -23,13 +23,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Object> handleValidationError(MethodArgumentNotValidException ex, HttpServletRequest req) {
-        FieldMessage message = new FieldMessage();
-        message.setStatus(400);
-        message.setField("Validation Error");
-        message.setError(ex.getFieldErrors().stream()
+        ValidationErrorMessage validationMessage = new ValidationErrorMessage();
+        validationMessage.setCode("UNPROCESSABLE");
+        validationMessage.setMessage("Validation Error");
+        validationMessage.setDetails(ex.getFieldErrors().stream()
                 .map(e -> new FieldError(e.getField(), e.getDefaultMessage()))
                 .collect(Collectors.toList()));
-        ResponseEntity<Object> response = new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        ResponseEntity<Object> response = new ResponseEntity<>(validationMessage, HttpStatus.UNPROCESSABLE_ENTITY);
         System.out.println("Response sent:"+ response);
         return response;
     }
@@ -39,7 +39,7 @@ public class GlobalExceptionHandler {
         validationMessage.setCode("UNPROCESSABLE");
         validationMessage.setMessage("Validation Error");
         validationMessage.setDetails(ex.getConstraintViolations().stream()
-                .map(violation -> new FieldMessage(
+                .map(violation -> new FieldError(
                         violation.getPropertyPath().toString(),
                         violation.getMessage()
                 ))
@@ -97,10 +97,12 @@ public class GlobalExceptionHandler {
         return response;
     }
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericError(Exception ex, HttpServletRequest req) {
+    public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest req) {
         FieldMessage message = new FieldMessage();
+        message.setStatus(400);
+        message.setField("ERROR:");
         message.setMessage(ex.getMessage());
-        ResponseEntity<String> response = new ResponseEntity<>(message.getMessage(), HttpStatus.BAD_REQUEST);
+        ResponseEntity<Object> response = new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
         System.out.println( ex + "Response sent:"+ response);
         return response;
     }

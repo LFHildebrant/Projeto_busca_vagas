@@ -1,7 +1,7 @@
 CREATE TABLE companies (
                            id_company INT NOT NULL UNIQUE AUTO_INCREMENT PRIMARY KEY,
                            address_id INT NOT NULL,
-                           name VARCHAR (150) NOT NULL,
+                           name VARCHAR (150) NOT NULL UNIQUE,
                            username VARCHAR(20) NOT NULL UNIQUE ,
                            password TEXT NOT NULL,
                            email VARCHAR(150) NOT NULL,

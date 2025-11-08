@@ -29,11 +29,11 @@ public class CompanyController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addCompany(@RequestBody @Valid CreateCompanyDto createCompanyDto, BindingResult result ){
+    public ResponseEntity<?> addCompany(@RequestBody @Valid CreateCompanyDto createCompanyDto){
 
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(result.getAllErrors());
-        } //else if (verificarionMethods.VerificarionUserExists(createCompanyDto.username()) != null){
+        //if (result.hasErrors()) {
+        //    return ResponseEntity.badRequest().body(result.getAllErrors());
+        // //else if (verificarionMethods.VerificarionUserExists(createCompanyDto.username()) != null){
             //return ResponseEntity.status(409).body(new ApiResponse("username already exists"));
         //}
         String encryptedPassword = new BCryptPasswordEncoder().encode(createCompanyDto.password());
@@ -63,6 +63,10 @@ public class CompanyController {
     public ResponseEntity<?> editUser (@RequestHeader ("Authorization") String tokenHeader, @RequestBody  @Valid CreateCompanyDto createCompanyDto, @PathVariable int company_id){
         ResponseEntity<?> response = null;
         response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, company_id);
+        if (response!=null){
+            return response;
+        }
+        response = verificarionMethods.updateUsername(createCompanyDto);
         if (response!=null){
             return response;
         }

@@ -1,5 +1,5 @@
 export class Config{
-    static BASE_URL = "http://localhost:21000";
+    static BASE_URL = "http://26.29.111.29:22000";
 
     static getId(token){
         if (token){

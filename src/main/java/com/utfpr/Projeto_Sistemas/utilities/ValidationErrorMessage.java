@@ -14,7 +14,7 @@ public class ValidationErrorMessage {
 
     private String message;
     private String code;
-    private List<FieldMessage> details;
+    private List<FieldError> details;
 
     public ValidationErrorMessage() {
     }
