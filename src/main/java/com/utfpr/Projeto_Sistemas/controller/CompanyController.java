@@ -2,6 +2,7 @@ package com.utfpr.Projeto_Sistemas.controller;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
+import com.utfpr.Projeto_Sistemas.dto.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.repository.CompanyRepository;
 import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
@@ -60,13 +61,9 @@ public class CompanyController {
         return ResponseEntity.status(200).body(companyService.getDataCompany(idCompany));
     }
     @PatchMapping("/{company_id}")
-    public ResponseEntity<?> editUser (@RequestHeader ("Authorization") String tokenHeader, @RequestBody  @Valid CreateCompanyDto createCompanyDto, @PathVariable int company_id){
+    public ResponseEntity<?> updateCompany (@RequestHeader ("Authorization") String tokenHeader, @RequestBody  @Valid UpdateCompanyDto updateCompanyDto, @PathVariable int company_id){
         ResponseEntity<?> response = null;
         response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, company_id);
-        if (response!=null){
-            return response;
-        }
-        response = verificarionMethods.updateUsername(createCompanyDto);
         if (response!=null){
             return response;
         }
@@ -76,8 +73,8 @@ public class CompanyController {
         }*/
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
-        String encryptedPassword = new BCryptPasswordEncoder().encode(createCompanyDto.password());
-        CreateCompanyDto companyDto = new CreateCompanyDto(createCompanyDto.username(), encryptedPassword, createCompanyDto.email(), createCompanyDto.name(), createCompanyDto.business(), createCompanyDto.phone(), createCompanyDto.street(), createCompanyDto.city(), createCompanyDto.state(), createCompanyDto.number());
+        String encryptedPassword = new BCryptPasswordEncoder().encode(updateCompanyDto.password());
+        UpdateCompanyDto companyDto = new UpdateCompanyDto(encryptedPassword, updateCompanyDto.email(), updateCompanyDto.name(), updateCompanyDto.business(), updateCompanyDto.phone(), updateCompanyDto.street(), updateCompanyDto.city(), updateCompanyDto.state(), updateCompanyDto.number());
         boolean created = companyService.updateCompany(companyDto, idUser);
         if (created) {
             return ResponseEntity.status(200).body(new ApiResponse("Updated"));

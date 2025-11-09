@@ -30,7 +30,8 @@ public class Address {
     @Size(min = 3, max = 150, message = "city must be between 3 and 150 characters")
     private String city;
 
-    @NotBlank(message = "state can not be empty")
+    @NotBlank(message = "state cannot be empty")
+    @Pattern(regexp = "^(?:AC|AL|AP|AM|BA|CE|DF|ES|GO|MA|MT|MS|MG|PA|PB|PR|PE|PI|RJ|RN|RS|RO|RR|SC|SP|SE|TO)$", message = "invalid state format, must be XX")
     private String state;
 
     public Address() {

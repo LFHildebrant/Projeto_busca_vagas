@@ -1,12 +1,9 @@
-package com.utfpr.Projeto_Sistemas.controller;
+package com.utfpr.Projeto_Sistemas.dto;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 
-public record CreateCompanyDto(
-        @NotBlank(message = "username can not be empty")
-        @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "invalid username format.")
-        String username,
+public record UpdateCompanyDto(
         @NotEmpty(message = "Password cannot be empty")
         @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "Invalid password format")
         String password,

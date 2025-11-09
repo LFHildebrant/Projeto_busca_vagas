@@ -116,13 +116,6 @@ public class VerificarionMethods {
         return ResponseEntity.status(422).body(errorMessage);
     }
 
-    public ResponseEntity<?> updateUsername(CreateCompanyDto createCompanyDto) {
-        if (createCompanyDto.username() != null && !createCompanyDto.username().isEmpty()) {
-            return ResponseEntity.status(422).body(new ApiResponse("cannot change username"));
-        }
-        return null;
-    }
-
     public ResponseEntity<?> verificationUserFieldUpdate(CreateUserDto createUserDto) {
         ValidationErrorMessage errorMessage = new ValidationErrorMessage();
         errorMessage.setMessage("Validation Error");

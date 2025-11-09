@@ -2,6 +2,7 @@ package com.utfpr.Projeto_Sistemas.service;
 
 import com.utfpr.Projeto_Sistemas.controller.CreateCompanyDto;
 import com.utfpr.Projeto_Sistemas.controller.CreateUserDto;
+import com.utfpr.Projeto_Sistemas.dto.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.entities.*;
 import com.utfpr.Projeto_Sistemas.repository.CompanyRepository;
 import jakarta.transaction.Transactional;
@@ -49,19 +50,19 @@ public class CompanyService {
         Company company = (Company) companyRepository.findByIdCompany(idCompany);
         return new CompanyDto(company.getName(), company.getUsername(), company.getEmail(), company.getPhone(), company.getBusiness(), company.getAddress().getStreet(), company.getAddress().getNumber(), company.getAddress().getCity(), company.getAddress().getState());
     }
-    public boolean updateCompany(CreateCompanyDto createCompanyDto, Long idCompany) {
+    public boolean updateCompany(UpdateCompanyDto updateCompanyDto, Long idCompany) {
         Company existingCompany = (Company) companyRepository.findByIdCompany(idCompany);
 
-        existingCompany.setName(createCompanyDto.name().toUpperCase());
-        existingCompany.setPassword(createCompanyDto.password());  //get the user from db, then put the new data on the user and save
-        existingCompany.setEmail(createCompanyDto.email());
-        existingCompany.setPhone(createCompanyDto.phone());
-        existingCompany.setBusiness(createCompanyDto.business());
+        existingCompany.setName(updateCompanyDto.name().toUpperCase());
+        existingCompany.setPassword(updateCompanyDto.password());  //get the user from db, then put the new data on the user and save
+        existingCompany.setEmail(updateCompanyDto.email());
+        existingCompany.setPhone(updateCompanyDto.phone());
+        existingCompany.setBusiness(updateCompanyDto.business());
         Address existingAddress = (Address) existingCompany.getAddress();
-        existingAddress.setStreet(createCompanyDto.street());
-        existingAddress.setNumber(createCompanyDto.number());
-        existingAddress.setCity(createCompanyDto.city());
-        existingAddress.setState(createCompanyDto.state());
+        existingAddress.setStreet(updateCompanyDto.street());
+        existingAddress.setNumber(updateCompanyDto.number());
+        existingAddress.setCity(updateCompanyDto.city());
+        existingAddress.setState(updateCompanyDto.state());
         existingCompany.setAddress(existingAddress);
 
         Company savedCompany = companyRepository.save(existingCompany);
