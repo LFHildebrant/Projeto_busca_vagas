@@ -49,7 +49,7 @@ public class SecurityConfig  {
                         .requestMatchers(HttpMethod.POST, "/login", "/users", "/companies").permitAll() // public routes
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // pré-flight global
                         .requestMatchers("/user/**").hasRole("USER")  // private routes
-                        //.requestMatchers("/companies/**").hasRole("COMPANY")  // private routes
+                        .requestMatchers("/companies/**").hasRole("COMPANY")  // private routes
 
                         .anyRequest().authenticated()  // any other who needs authentication
                 )
