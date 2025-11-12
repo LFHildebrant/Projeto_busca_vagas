@@ -4,8 +4,8 @@ import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 
 public record UpdateCompanyDto(
-        @NotEmpty(message = "Password cannot be empty")
-        @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "Invalid password format")
+        //@NotEmpty(message = "Password cannot be empty")
+        @Pattern(regexp = "^([0-9a-zA-Z]{3,20})?$", message = "Invalid password format")
         String password,
         @Column(name = "email", nullable = true)
         @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "invalid email format")

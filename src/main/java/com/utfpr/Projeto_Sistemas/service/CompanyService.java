@@ -6,6 +6,7 @@ import com.utfpr.Projeto_Sistemas.dto.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.entities.*;
 import com.utfpr.Projeto_Sistemas.repository.CompanyRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -53,8 +54,11 @@ public class CompanyService {
     public boolean updateCompany(UpdateCompanyDto updateCompanyDto, Long idCompany) {
         Company existingCompany = (Company) companyRepository.findByIdCompany(idCompany);
 
-        existingCompany.setName(updateCompanyDto.name().toUpperCase());
-        existingCompany.setPassword(updateCompanyDto.password());  //get the user from db, then put the new data on the user and save
+        existingCompany.setName(updateCompanyDto.name().toUpperCase());   //get the user from db, then put the new data on the user and save
+        if (!updateCompanyDto.password().isEmpty()) {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(updateCompanyDto.password());
+            existingCompany.setPassword(encryptedPassword);
+        }
         existingCompany.setEmail(updateCompanyDto.email());
         existingCompany.setPhone(updateCompanyDto.phone());
         existingCompany.setBusiness(updateCompanyDto.business());

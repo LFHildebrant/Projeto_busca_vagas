@@ -50,14 +50,12 @@ public class CompanyController {
     @GetMapping("/{company_id}")
     public ResponseEntity<?> getCompany(@RequestHeader ("Authorization") String tokenHeader, @PathVariable int company_id){
         ResponseEntity<?> response = null;
-        System.out.println("AQUI1111111" );
         response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, company_id);
         if (response!=null){
             return response;
         }
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idCompany = Long.parseLong(tokenService.validateToken(tokenCleaned));
-        System.out.println("AQUI" + idCompany);
         return ResponseEntity.status(200).body(companyService.getDataCompany(idCompany));
     }
     @PatchMapping("/{company_id}")
@@ -67,14 +65,10 @@ public class CompanyController {
         if (response!=null){
             return response;
         }
-        /*response = verificarionMethods.VerificationUserFieldUpdate(createUserDto);
-        if (response != null) {
-            return response;
-        }*/
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
-        String encryptedPassword = new BCryptPasswordEncoder().encode(updateCompanyDto.password());
-        UpdateCompanyDto companyDto = new UpdateCompanyDto(encryptedPassword, updateCompanyDto.email(), updateCompanyDto.name(), updateCompanyDto.business(), updateCompanyDto.phone(), updateCompanyDto.street(), updateCompanyDto.city(), updateCompanyDto.state(), updateCompanyDto.number());
+
+        UpdateCompanyDto companyDto = new UpdateCompanyDto(updateCompanyDto.password(), updateCompanyDto.email(), updateCompanyDto.name(), updateCompanyDto.business(), updateCompanyDto.phone(), updateCompanyDto.street(), updateCompanyDto.city(), updateCompanyDto.state(), updateCompanyDto.number());
         boolean created = companyService.updateCompany(companyDto, idUser);
         if (created) {
             return ResponseEntity.status(200).body(new ApiResponse("Updated"));
