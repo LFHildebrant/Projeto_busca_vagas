@@ -2,17 +2,15 @@ package com.utfpr.Projeto_Sistemas.controller;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
-import com.utfpr.Projeto_Sistemas.dto.UpdateCompanyDto;
-import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
-import com.utfpr.Projeto_Sistemas.repository.CompanyRepository;
-import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
+import com.utfpr.Projeto_Sistemas.dto.company.CreateCompanyDto;
+import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
+import com.utfpr.Projeto_Sistemas.utilities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.utilities.VerificarionMethods;
 import com.utfpr.Projeto_Sistemas.service.CompanyService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,12 +29,6 @@ public class CompanyController {
 
     @PostMapping
     public ResponseEntity<?> addCompany(@RequestBody @Valid CreateCompanyDto createCompanyDto){
-
-        //if (result.hasErrors()) {
-        //    return ResponseEntity.badRequest().body(result.getAllErrors());
-        // //else if (verificarionMethods.VerificarionUserExists(createCompanyDto.username()) != null){
-            //return ResponseEntity.status(409).body(new ApiResponse("username already exists"));
-        //}
         String encryptedPassword = new BCryptPasswordEncoder().encode(createCompanyDto.password());
         CreateCompanyDto companyDto = new CreateCompanyDto(createCompanyDto.username(), encryptedPassword, createCompanyDto.email(), createCompanyDto.name(), createCompanyDto.business(), createCompanyDto.phone(), createCompanyDto.street(), createCompanyDto.city(), createCompanyDto.state(), createCompanyDto.number());
         boolean created = companyService.createUser(companyDto);

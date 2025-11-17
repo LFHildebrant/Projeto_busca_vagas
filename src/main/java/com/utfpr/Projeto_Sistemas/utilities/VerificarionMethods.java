@@ -1,10 +1,7 @@
 package com.utfpr.Projeto_Sistemas.utilities;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
-import com.utfpr.Projeto_Sistemas.controller.CreateCompanyDto;
-import com.utfpr.Projeto_Sistemas.controller.CreateUserDto;
-import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
-import com.utfpr.Projeto_Sistemas.entities.UserDto;
+import com.utfpr.Projeto_Sistemas.dto.user.CreateUserDto;
 import com.utfpr.Projeto_Sistemas.service.CompanyService;
 import com.utfpr.Projeto_Sistemas.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -12,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class VerificarionMethods {

@@ -1,13 +1,12 @@
 package com.utfpr.Projeto_Sistemas.config;
 
-import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
+import com.utfpr.Projeto_Sistemas.utilities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.utilities.FieldError;
 import com.utfpr.Projeto_Sistemas.utilities.FieldMessage;
 import com.utfpr.Projeto_Sistemas.utilities.ValidationErrorMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;

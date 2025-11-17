@@ -5,7 +5,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.utfpr.Projeto_Sistemas.entities.Company;
-import com.utfpr.Projeto_Sistemas.entities.TokenResponse;
+import com.utfpr.Projeto_Sistemas.utilities.TokenResponse;
 import com.utfpr.Projeto_Sistemas.entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 @Service
 public class TokenService {
@@ -45,12 +43,12 @@ public class TokenService {
           String token = JWT.create()
                   .withIssuer("auth_api")
                   .withSubject(String.valueOf(subjectId))
-                  .withExpiresAt(genExpirationDate())
+                  .withExpiresAt(Instant.now().plusSeconds(genExpirationDate()))
                   .withClaim("username", username)
                   .withClaim("role", role)
                   .sign(algorithm);
           tokenWhitelist.add(token, genExpirationDate());
-          return new TokenResponse(token, String.valueOf(genExpirationDate()));
+          return new TokenResponse(token, genExpirationDate());
       } catch (JWTVerificationException exception){
             throw new RuntimeException("Error while generating JWT Token", exception);
       }
@@ -98,8 +96,8 @@ public class TokenService {
         return token.replace("Bearer ", ""); //cut off "Bearer "
     }
 
-    private Instant genExpirationDate() {
+    private Integer genExpirationDate() {
 
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
+        return 3600; //1h
     }
 }

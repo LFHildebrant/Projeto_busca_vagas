@@ -2,9 +2,8 @@ package com.utfpr.Projeto_Sistemas.controller;
 
 //import com.utfpr.Projeto_Sistemas.config.CustomUserDetails;
 import com.utfpr.Projeto_Sistemas.config.TokenService;
-import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
-import com.utfpr.Projeto_Sistemas.entities.User;
-import com.utfpr.Projeto_Sistemas.utilities.VerificarionMethods;
+import com.utfpr.Projeto_Sistemas.dto.auth.AuthenticationDto;
+import com.utfpr.Projeto_Sistemas.utilities.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import javax.naming.AuthenticationException;
 import java.time.Instant;
 
 @RestController

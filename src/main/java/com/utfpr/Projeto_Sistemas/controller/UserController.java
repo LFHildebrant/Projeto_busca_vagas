@@ -2,11 +2,14 @@ package com.utfpr.Projeto_Sistemas.controller;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
-import com.utfpr.Projeto_Sistemas.entities.ApiResponse;
+import com.utfpr.Projeto_Sistemas.dto.user.CreateUserDto;
+import com.utfpr.Projeto_Sistemas.dto.user.UpdateUserDto;
+import com.utfpr.Projeto_Sistemas.utilities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
 import com.utfpr.Projeto_Sistemas.service.UserService;
 import com.utfpr.Projeto_Sistemas.utilities.VerificarionMethods;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.time.Clock;
 
 
 @RestController
@@ -36,14 +38,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> addUser(@RequestBody CreateUserDto createUserDto){
+    public ResponseEntity<?> addUser(@RequestBody @Valid CreateUserDto createUserDto){
 
-        ResponseEntity<?> response = verificarionMethods.VerificationUserFieldCreate(createUserDto);
+        ResponseEntity<?> response = null; //verificarionMethods.VerificationUserFieldCreate(createUserDto);
         if (response != null) {
             return response;
         }
         String encryptedPassword = new BCryptPasswordEncoder().encode(createUserDto.password());
-        CreateUserDto userDto = new CreateUserDto(createUserDto.username(), encryptedPassword, createUserDto.email(), createUserDto.name(), createUserDto.phone(), createUserDto.experience(), createUserDto.education());
+        CreateUserDto userDto = new CreateUserDto(createUserDto.username(), encryptedPassword, createUserDto.email(), createUserDto.name(), createUserDto.experience(),createUserDto.phone(), createUserDto.education());
         boolean created = userService.createUser(userDto);
         if (created) {
             return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse("Created"));
@@ -66,21 +68,16 @@ public class UserController {
     }
 
     @PatchMapping("/{user_id}")
-    public ResponseEntity<?> editUser (@RequestHeader ("Authorization") String tokenHeader, @RequestBody CreateUserDto createUserDto, @PathVariable int user_id){
+    public ResponseEntity<?> editUser (@RequestHeader ("Authorization") String tokenHeader, @RequestBody @Valid UpdateUserDto updateUserDto, @PathVariable int user_id){
         ResponseEntity<?> response = null;
         response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, user_id);
         if (response!=null){
             return response;
         }
-        response = verificarionMethods.verificationUserFieldUpdate(createUserDto);
-        if (response != null) {
-            return response;
-        }
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
-        String encryptedPassword = new BCryptPasswordEncoder().encode(createUserDto.password());
-        CreateUserDto userDto = new CreateUserDto(createUserDto.username(), encryptedPassword, createUserDto.email(), createUserDto.name(), createUserDto.phone(), createUserDto.experience(), createUserDto.education());
-        boolean created = userService.updateUser(userDto, idUser);
+        //CreateUserDto userDto = new CreateUserDto(updateUserDto.username(), updateUserDto.password(), updateUserDto.email(), updateUserDto.name(), updateUserDto.phone(), updateUserDto.experience(), updateUserDto.education());
+        boolean created = userService.updateUser(updateUserDto, idUser);
         if (created) {
             return ResponseEntity.status(200).body(new ApiResponse("Updated"));
         } else {

@@ -48,11 +48,11 @@ public class Company implements UserDetails {
     //@Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "invalid password format.")
     private String password;
 
-    @Column(name = "email", nullable = true)
+    @Column(name = "email", nullable = false)
     @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "invalid email format")
     private String email;
 
-    @Column(name = "phone", nullable = true)
+    @Column(name = "phone", nullable = false)
     @Pattern(regexp = "^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$", message = "invalid phone format")
     private String phone;
 

@@ -10,14 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class TokenWhitelist {
     private static final Map<String, Instant> whitelist = new ConcurrentHashMap<>();
 
-    public void add(String token, Instant expiration) {
-        whitelist.put(token, expiration);
+    public void add(String token, Integer expiration) {
+        Instant expirationDate = Instant.now().plusSeconds(expiration);
+        whitelist.put(token, expirationDate);
     }
 
     public boolean exists(String token) {
         Instant exp = whitelist.get(token);
         if (exp == null) return false;
-        if (exp.isBefore(Instant.now())) {
+        if (Instant.now().isAfter(exp)) {
             whitelist.remove(token);
             return false;
         }

@@ -1,11 +1,14 @@
-package com.utfpr.Projeto_Sistemas.dto;
+package com.utfpr.Projeto_Sistemas.dto.company;
 
 import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
 
-public record UpdateCompanyDto(
-        //@NotEmpty(message = "Password cannot be empty")
-        @Pattern(regexp = "^([0-9a-zA-Z]{3,20})?$", message = "Invalid password format")
+public record CreateCompanyDto(
+        @NotBlank(message = "username can not be empty")
+        @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "invalid username format.")
+        String username,
+        @NotEmpty(message = "Password cannot be empty")
+        @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "Invalid password format")
         String password,
         @Column(name = "email", nullable = true)
         @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "invalid email format")
@@ -16,7 +19,8 @@ public record UpdateCompanyDto(
         @NotBlank(message = "business can not be empty")
         @Size(min = 4, max = 150, message = "business must be between 4 and 150 characters")
         String business,
-        @Pattern(regexp = "^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$", message = "invalid phone format")
+        @NotBlank(message = "phone can not be empty")
+        @Pattern(regexp = "^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$", message = "invalid phone format")
         String phone,
         @NotBlank(message = "street can not be empty")
         @Size(min = 3, max = 150, message = "street must be between 3 and 150 characters")

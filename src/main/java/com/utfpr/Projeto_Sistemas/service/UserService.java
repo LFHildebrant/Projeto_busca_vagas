@@ -1,16 +1,17 @@
 package com.utfpr.Projeto_Sistemas.service;
 
-import com.utfpr.Projeto_Sistemas.controller.CreateUserDto;
+import com.utfpr.Projeto_Sistemas.dto.user.CreateUserDto;
+import com.utfpr.Projeto_Sistemas.dto.user.UpdateUserDto;
 import com.utfpr.Projeto_Sistemas.entities.Role;
 import com.utfpr.Projeto_Sistemas.entities.User;
-import com.utfpr.Projeto_Sistemas.entities.UserDto;
+import com.utfpr.Projeto_Sistemas.dto.user.UserDto;
 import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -32,14 +33,15 @@ public class UserService {
 
     public boolean createUser(CreateUserDto createUserDto) {
         //userDto -> user
+
         var Entity = new User(
                 createUserDto.name().toUpperCase(),
                 createUserDto.username(),
                 createUserDto.password(),
-                createUserDto.email(),
-                createUserDto.phone(),
-                createUserDto.experience(),
-                createUserDto.education(),
+                verifyNullable(createUserDto.email()),
+                verifyNullable(createUserDto.phone()),
+                verifyNullable(createUserDto.experience()),
+                verifyNullable(createUserDto.education()),
                 Instant.now(),
                 null, // date update
                 Role.USER
@@ -49,15 +51,25 @@ public class UserService {
         //check if user has been created
         return userRepositoy.existsById(savedUser.getIdUser());
     }
-    public boolean updateUser(CreateUserDto createUserDto, Long idUser) {
+    public String verifyNullable(String value){
+        if (value == null || value.trim().isEmpty()){
+            return null;
+        }
+        return value;
+    }
+
+    public boolean updateUser(UpdateUserDto updateUserDto, Long idUser) {
         User existingUser = (User) userRepositoy.findByIdUser(idUser);
 
-        existingUser.setName(createUserDto.name().toUpperCase());
-        existingUser.setPassword(createUserDto.password());  //get the user from db, then put the new data on the user and save
-        existingUser.setEmail(createUserDto.email());
-        existingUser.setPhone(createUserDto.phone());
-        existingUser.setExperience(createUserDto.experience());
-        existingUser.setEducation(createUserDto.education());
+        existingUser.setName(updateUserDto.name().toUpperCase()); //get the user from db, then put the new data on the user and save
+        if (!updateUserDto.password().isEmpty()) {
+            String encryptedPassword = new BCryptPasswordEncoder().encode(updateUserDto.password());
+            existingUser.setPassword(encryptedPassword);
+        }
+        existingUser.setEmail(verifyNullable(updateUserDto.email()));
+        existingUser.setPhone(verifyNullable(updateUserDto.phone()));
+        existingUser.setExperience(verifyNullable(updateUserDto.experience()));
+        existingUser.setEducation(verifyNullable(updateUserDto.education()));
 
         User savedUser = userRepositoy.save(existingUser);
         //check if user has been created

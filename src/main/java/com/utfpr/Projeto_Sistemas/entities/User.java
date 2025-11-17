@@ -1,6 +1,7 @@
 package com.utfpr.Projeto_Sistemas.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -25,30 +26,33 @@ public class User implements UserDetails {
     private Integer idUser;
 
     @Column(name = "name", nullable = false)
-    @NotNull
-    @Size(min = 4, max = 150)
+    @NotBlank(message = "Name can not be empty")
+    @Size(min = 4, max = 150, message = "name must be between 4 and 150 characters")
     private String name;
 
     @Column(name = "username", unique = true, nullable = false)
-    @NotNull
-    @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$")
+    @NotBlank(message = "username can not be empty")
+    @Pattern(regexp = "^[0-9a-zA-Z]{3,20}$", message = "invalid username format.")
     private String username;
 
     @Column(name = "password", nullable = false)
-    @NotNull
+    @NotBlank(message = "Password can not be empty")
     private String password;
 
     @Column(name = "email", nullable = true)
+    @Pattern(regexp = "^$|^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "invalid email format")
     private String email;
 
     @Column(name = "phone", nullable = true)
-    @Pattern(regexp = "^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$")
+    @Pattern(regexp = "^$|^(\\([0-9]{2}\\)|[0-9]{2})9?[0-9]{4}-?[0-9]{4}$", message = "invalid phone format")
     private String phone;
 
     @Column(name = "experience", nullable = true)
+    @Size(min = 10, max = 600, message = "experience must be between 10 and 600 characters")
     private String experience;
 
     @Column(name = "education", nullable = true)
+    @Size(min = 10, max = 600, message = "education must be between 10 and 600 characters")
     private String education;
 
     @CreationTimestamp

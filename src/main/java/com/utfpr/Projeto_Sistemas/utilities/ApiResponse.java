@@ -1,6 +1,4 @@
-package com.utfpr.Projeto_Sistemas.entities;
-
-import lombok.Setter;
+package com.utfpr.Projeto_Sistemas.utilities;
 
 
 public class ApiResponse{

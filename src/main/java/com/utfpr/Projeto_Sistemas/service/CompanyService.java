@@ -1,8 +1,8 @@
 package com.utfpr.Projeto_Sistemas.service;
 
-import com.utfpr.Projeto_Sistemas.controller.CreateCompanyDto;
-import com.utfpr.Projeto_Sistemas.controller.CreateUserDto;
-import com.utfpr.Projeto_Sistemas.dto.UpdateCompanyDto;
+import com.utfpr.Projeto_Sistemas.dto.company.CreateCompanyDto;
+import com.utfpr.Projeto_Sistemas.dto.company.CompanyDto;
+import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.entities.*;
 import com.utfpr.Projeto_Sistemas.repository.CompanyRepository;
 import jakarta.transaction.Transactional;
