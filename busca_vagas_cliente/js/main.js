@@ -1,6 +1,6 @@
 export class Config{
-    static BASE_URL = "http://localhost:21000";
-
+    static BASE_URL ="";
+    
     static getId(token){
         if (token){
             const base64Url = token.split('.')[1];
@@ -21,3 +21,4 @@ export class Config{
         }
     }
 }
+

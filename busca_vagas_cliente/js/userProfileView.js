@@ -35,9 +35,8 @@ class UserProfileView{
 
         fields.forEach(field => {
             const value = document.getElementById(field).value.trim();
-            if (value !== "") {
-                user[field] = value;
-            }
+            user[field] = value;
+            
         });
         try{
             const result = await userService.updateUser(id, localStorage.getItem("token"), user);

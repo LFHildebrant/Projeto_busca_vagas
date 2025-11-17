@@ -1,16 +1,18 @@
 import { Config } from './main.js';
 
 export class AuthService {
+  
     constructor(){
 
     }
+    
     async login(username, password) {
-        console.log("📤 ENVIANDO requisição POST para:" + Config.BASE_URL + "/login");
+        console.log("📤 ENVIANDO requisição POST para:" + sessionStorage.getItem("BASE_URL") + "/login");
         console.log("📦 Corpo da requisição:", JSON.stringify({username, password}, null, 2));
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
         });
-        const response = await fetch(Config.BASE_URL + "/login", {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/login", {
             method: "POST",
                 body: JSON.stringify( {
                     username, password
@@ -29,12 +31,12 @@ export class AuthService {
     }
 
     async logout(token){
-        console.log("📤 ENVIANDO requisição POST para:" + Config.BASE_URL + "/logout");
+        console.log("📤 ENVIANDO requisição POST para:" + sessionStorage.getItem("BASE_URL") + "/logout");
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
-        const response = await fetch(Config.BASE_URL + "/logout", {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/logout", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

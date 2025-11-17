@@ -6,12 +6,12 @@ export class CompanyService {
     }
 
     async getAllDataCompany(token, id){
-        console.log("📤 ENVIANDO requisição GET para:" + Config.BASE_URL + "/companies" + "/" + id);
+        console.log("📤 ENVIANDO requisição GET para:" + sessionStorage.getItem("BASE_URL") + "/companies" + "/" + id);
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
-        const response = await fetch(Config.BASE_URL + "/companies" + "/" + id, {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/companies" + "/" + id, {
                 method: "GET",
                     headers: {
                         "Content-type": "application/json",
@@ -29,12 +29,12 @@ export class CompanyService {
     }
 
     async deleteCompany(id, token){
-        console.log("📤 ENVIANDO requisição DELETE para:" + Config.BASE_URL + "/companies" + "/" + id);
+        console.log("📤 ENVIANDO requisição DELETE para:" + sessionStorage.getItem("BASE_URL") + "/companies" + "/" + id);
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
-        const response = await fetch(Config.BASE_URL + "/companies" + "/" + id,{
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/companies" + "/" + id,{
             method: "DELETE",
             headers: {
                     "Content-type": "application/json",
@@ -52,12 +52,12 @@ export class CompanyService {
     }
 
     async createCompany(dataCompany) {
-        console.log("📤 ENVIANDO requisição POST para:" + Config.BASE_URL + "/companies");
+        console.log("📤 ENVIANDO requisição POST para:" + sessionStorage.getItem("BASE_URL") + "/companies");
         console.log("📦 Corpo da requisição:", JSON.stringify(dataCompany, null, 2));
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
         });
-        const response = await fetch(Config.BASE_URL + "/companies", {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/companies", {
             method: "POST",
                 body: JSON.stringify(dataCompany),
                 headers: {
@@ -76,14 +76,14 @@ export class CompanyService {
 
     async updateCompany(id, token, dataCompany) {
 
-        console.log("📤 ENVIANDO requisição PATCH para:" + Config.BASE_URL + "/companies" + "/" + id);
+        console.log("📤 ENVIANDO requisição PATCH para:" + sessionStorage.getItem("BASE_URL") + "/companies" + "/" + id);
         console.log("📦 Corpo da requisição:", JSON.stringify(dataCompany, null, 2));
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
 
-        const response = await fetch(Config.BASE_URL + "/companies" + "/" + id, {
+        const response = await fetch(sessionStorage.getItem("BASE_URL")+ "/companies" + "/" + id, {
             method: "PATCH",
                 body: JSON.stringify(dataCompany),
                 headers: {

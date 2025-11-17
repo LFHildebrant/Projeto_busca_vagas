@@ -13,7 +13,7 @@ class Connection {
     handleSubmitUpdate(event){
         event.preventDefault();
         let url = "http://" + this.ip.value + ":" + this.porta.value;
-        Config.BASE_URL = url;
+        sessionStorage.setItem("BASE_URL", url);
         console.log(Config.BASE_URL);
 
         setTimeout(() => {

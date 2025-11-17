@@ -11,7 +11,7 @@ export class UserService {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
-        const response = await fetch(Config.BASE_URL + "/users" + "/" + id, {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/users" + "/" + id, {
                 method: "GET",
                     headers: {
                         "Content-type": "application/json",
@@ -29,12 +29,12 @@ export class UserService {
     }
 
     async deleteUSer(id, token){
-        console.log("📤 ENVIANDO requisição DELETE para:" + Config.BASE_URL + "/users" + "/" + id);
+        console.log("📤 ENVIANDO requisição DELETE para:" + sessionStorage.getItem("BASE_URL") + "/users" + "/" + id);
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
-        const response = await fetch(Config.BASE_URL + "/users" + "/" + id,{
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/users" + "/" + id,{
             method: "DELETE",
             headers: {
                     "Content-type": "application/json",
@@ -52,12 +52,12 @@ export class UserService {
     }
 
     async createUser(dataUser) {
-        console.log("📤 ENVIANDO requisição POST para:" + Config.BASE_URL + "/users");
+        console.log("📤 ENVIANDO requisição POST para:" + sessionStorage.getItem("BASE_URL") + "/users");
         console.log("📦 Corpo da requisição:", JSON.stringify(dataUser, null, 2));
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
         });
-        const response = await fetch(Config.BASE_URL + "/users", {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/users", {
             method: "POST",
                 body: JSON.stringify(dataUser),
                 headers: {
@@ -76,14 +76,14 @@ export class UserService {
 
     async updateUser(id, token, dataUser) {
 
-        console.log("📤 ENVIANDO requisição PATCH para:" + Config.BASE_URL + "/users" + "/" + id);
+        console.log("📤 ENVIANDO requisição PATCH para:" + sessionStorage.getItem("BASE_URL") + "/users" + "/" + id);
         console.log("📦 Corpo da requisição:", JSON.stringify(dataUser, null, 2));
         console.log("🔑 Cabeçalhos:", {
             "Content-type": "application/json",
             "Authorization": `Bearer ${token}`
         });
 
-        const response = await fetch(Config.BASE_URL + "/users" + "/" + id, {
+        const response = await fetch(sessionStorage.getItem("BASE_URL") + "/users" + "/" + id, {
             method: "PATCH",
                 body: JSON.stringify(dataUser),
                 headers: {
