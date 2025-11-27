@@ -40,6 +40,21 @@ public class VerificarionMethods {
         }
         return null;
     }
+    public ResponseEntity<?> verifyTokenInvalidUsernotFound(String tokenHeader){
+        if (!tokenService.verifyToken(tokenHeader)){  //verify received token
+            return ResponseEntity.status(401).body(new ApiResponse("Invalid Token"));
+        }
+        String tokenCleaned = tokenService.replaceToken(tokenHeader);
+        long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned)); //idUser from token
+        System.out.println("exists? " + userService.existsUserById(idUser));
+        if (!userService.existsUserById(idUser)){
+            if (!companyService.existsCompanyById(idUser)){
+                System.out.println("exists? " + userService.existsUserById(idUser));
+                return ResponseEntity.status(404).body(new ApiResponse("User not found"));
+            }
+        }
+        return null;
+    }
 
     public ResponseEntity<?> VerificarionUserExists(String username){
         if (this.userService.getUserByUsername(username)  != null ) {
