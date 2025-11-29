@@ -3,10 +3,7 @@ package com.utfpr.Projeto_Sistemas.controller;
 import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
 import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
-import com.utfpr.Projeto_Sistemas.dto.job.CreateJobDto;
-import com.utfpr.Projeto_Sistemas.dto.job.JobDto;
-import com.utfpr.Projeto_Sistemas.dto.job.JobsSearchDto;
-import com.utfpr.Projeto_Sistemas.dto.job.UpdateJobDto;
+import com.utfpr.Projeto_Sistemas.dto.job.*;
 import com.utfpr.Projeto_Sistemas.dto.jobsearch.JobSearchDto;
 import com.utfpr.Projeto_Sistemas.entities.Job;
 import com.utfpr.Projeto_Sistemas.service.CompanyService;
@@ -101,16 +98,24 @@ public class JobController {
     }
     @PostMapping("/search")
     public ResponseEntity<?> getAllJobsWithFilter(@RequestHeader("Authorization") String tokenHeader ,@RequestBody @Valid JobSearchDto jobSearchDto) {
-        String tokenCleaned = tokenService.replaceToken(tokenHeader);
+        //String tokenCleaned = tokenService.replaceToken(tokenHeader);
         //long idCompany = Long.parseLong(tokenService.validateToken(tokenCleaned));
         ResponseEntity<?> response = verificarionMethods.verifyTokenInvalidUsernotFound(tokenHeader);
         if (response!=null){
             return response;
         }
-        List<Job> jobs = jobService.searchJobsWithSpecs(jobSearchDto.filters().getFirst());
-        if (!jobs.isEmpty()) {
-            List<JobDto> jobDtos = jobs.stream().map(JobDto::new).toList();
-            return ResponseEntity.status(200).body(new JobsSearchDto(jobDtos));
+        //List<Job> jobs = jobService.searchJobsWithSpecs(jobSearchDto.filters().getFirst());
+
+        List<JobDto> jobsSearchDtos = jobSearchDto.filters().stream()
+                .map(filterDto -> jobService.searchJobsWithSpecs(filterDto))
+                .flatMap(List::stream)
+                .distinct()
+                .map(JobDto::new)
+                .toList();
+
+        if (!jobsSearchDtos.isEmpty()) {
+            //List<JobDto> jobDtos = jobs.stream().map(JobDto::new).toList();
+            return ResponseEntity.status(200).body(new JobsSearchDto(jobsSearchDtos));
         } else {
             return ResponseEntity.status(404).body(new ApiResponse("Job not found"));
         }
