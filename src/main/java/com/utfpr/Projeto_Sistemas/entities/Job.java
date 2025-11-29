@@ -25,7 +25,7 @@ public class Job {
     @Column(name = "id_job")
     private int idJob;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name ="company_id")
     private Company company;
 
