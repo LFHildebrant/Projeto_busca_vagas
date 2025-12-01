@@ -29,11 +29,23 @@ public class VerificarionMethods {
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned)); //idUser from token
         if (!userService.existsUserById(idUser)){
-            if (!companyService.existsCompanyById(idUser)){
-                return ResponseEntity.status(404).body(new ApiResponse("User not found"));
-            }
+            return ResponseEntity.status(404).body(new ApiResponse("User not found"));
         }
         if (idUser != user_id){
+            return ResponseEntity.status(403).body(new ApiResponse("Forbidden"));
+        }
+        return null;
+    }
+    public ResponseEntity<?> verifyTokenInvalidForbiddenCompanynotFound(String tokenHeader, long company_id){
+        if (!tokenService.verifyToken(tokenHeader)){  //verify received token
+            return ResponseEntity.status(401).body(new ApiResponse("Invalid Token"));
+        }
+        String tokenCleaned = tokenService.replaceToken(tokenHeader);
+        long idCompany = Long.parseLong(tokenService.validateToken(tokenCleaned)); //idUser from token
+        if (!companyService.existsCompanyById(idCompany)){
+            return ResponseEntity.status(404).body(new ApiResponse("User not found"));
+        }
+        if (idCompany != company_id){
             return ResponseEntity.status(403).body(new ApiResponse("Forbidden"));
         }
         return null;
@@ -54,6 +66,12 @@ public class VerificarionMethods {
         return null;
     }
 
+    public ResponseEntity<?> verifyTokenInvalid(String tokenHeader){
+        if (!tokenService.verifyToken(tokenHeader)){  //verify received token
+            return ResponseEntity.status(401).body(new ApiResponse("Invalid Token"));
+        }
+        return null;
+    }
     public ResponseEntity<?> VerificarionUserExists(String username){
         if (this.userService.getUserByUsername(username)  != null ) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ApiResponse("username already exists"));

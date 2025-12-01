@@ -4,6 +4,14 @@ import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
 import com.utfpr.Projeto_Sistemas.dto.company.CreateCompanyDto;
 import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
+import com.utfpr.Projeto_Sistemas.dto.job.JobDto;
+import com.utfpr.Projeto_Sistemas.dto.job.JobsSearchDto;
+import com.utfpr.Projeto_Sistemas.dto.jobsearch.JobSearchDto;
+import com.utfpr.Projeto_Sistemas.dto.user.UserJobDto;
+import com.utfpr.Projeto_Sistemas.dto.user.UsersListByApplication;
+import com.utfpr.Projeto_Sistemas.repository.ApplicationRepository;
+import com.utfpr.Projeto_Sistemas.repository.JobRepository;
+import com.utfpr.Projeto_Sistemas.service.JobService;
 import com.utfpr.Projeto_Sistemas.utilities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.utilities.VerificarionMethods;
 import com.utfpr.Projeto_Sistemas.service.CompanyService;
@@ -13,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/companies")
 public class CompanyController {
@@ -20,11 +30,17 @@ public class CompanyController {
     private final CompanyService companyService;
     private final VerificarionMethods verificarionMethods;
     private final TokenService tokenService;
+    private final JobService jobService;
+    private final ApplicationRepository applicationRepository;
+    private final JobRepository jobRepository;
 
-    public CompanyController(CompanyService companyService, TokenService tokenService, VerificarionMethods verificarionMethods) {
+    public CompanyController(CompanyService companyService, TokenService tokenService, VerificarionMethods verificarionMethods, JobService jobService, ApplicationRepository applicationRepository, JobRepository jobRepository) {
         this.companyService = companyService;
         this.tokenService = tokenService;
         this.verificarionMethods = verificarionMethods;
+        this.jobService = jobService;
+        this.applicationRepository = applicationRepository;
+        this.jobRepository = jobRepository;
     }
 
     @PostMapping
@@ -86,5 +102,29 @@ public class CompanyController {
             return ResponseEntity.status(200).body(new ApiResponse("Deleted"));
         }
         return ResponseEntity.status(500).body("Error while deleting: ");
+    }
+    @PostMapping("/{company_id}/jobs")
+    public ResponseEntity<?> getAllJobsByCompanyIdWithFilter(@RequestHeader("Authorization") String tokenHeader ,@RequestBody @Valid JobSearchDto jobSearchDto, @PathVariable long company_id) {
+        ResponseEntity<?> response = verificarionMethods.verifyTokenInvalidForbiddenCompanynotFound(tokenHeader, company_id);
+        if (response!=null){
+            return response;
+        }
+        List<JobDto> jobsSearchDtos = jobSearchDto.filters().stream() //split the various filters
+                .map(filterDto -> jobService.searchJobsByCompanyWithSpecs(filterDto, company_id)) //for each filter, does a sql, various jobs list
+                .flatMap(List::stream)//gather the jobs lists in just one
+                .distinct()
+                .map(JobDto::new) //for each job -> JobDto
+                .toList();
+        if (!jobsSearchDtos.isEmpty()) {
+            return ResponseEntity.status(200).body(new JobsSearchDto(jobsSearchDtos));
+        } else {
+            return ResponseEntity.status(404).body(new ApiResponse("Job not found"));
+        }
+    }
+    @GetMapping("/{company_id}/jobs/{job_id}")
+    public ResponseEntity<?> getAllUsersByJob(@RequestHeader("Authorization") String tokenHeader, @PathVariable long company_id, @PathVariable int job_id) {
+        ResponseEntity<?> response = verificarionMethods.verifyTokenInvalidForbiddenCompanynotFound(tokenHeader, company_id);
+        if (response!=null){ return response;}
+        return jobService.searchUsersByApplication(company_id, job_id);
     }
 }

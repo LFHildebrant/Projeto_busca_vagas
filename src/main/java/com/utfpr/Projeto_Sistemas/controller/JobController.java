@@ -106,11 +106,11 @@ public class JobController {
         }
         //List<Job> jobs = jobService.searchJobsWithSpecs(jobSearchDto.filters().getFirst());
 
-        List<JobDto> jobsSearchDtos = jobSearchDto.filters().stream()
-                .map(filterDto -> jobService.searchJobsWithSpecs(filterDto))
-                .flatMap(List::stream)
+        List<JobDto> jobsSearchDtos = jobSearchDto.filters().stream() //split the various filters
+                .map(filterDto -> jobService.searchJobsWithSpecs(filterDto)) //for each filter, does a sql, various jobs list
+                .flatMap(List::stream)//gather the jobs lists in just one
                 .distinct()
-                .map(JobDto::new)
+                .map(JobDto::new) //for each job -> JobDto
                 .toList();
 
         if (!jobsSearchDtos.isEmpty()) {
@@ -118,6 +118,19 @@ public class JobController {
             return ResponseEntity.status(200).body(new JobsSearchDto(jobsSearchDtos));
         } else {
             return ResponseEntity.status(404).body(new ApiResponse("Job not found"));
+        }
+    }
+    @PostMapping("{job_id}")
+    ResponseEntity<?> applyForJob(@RequestHeader("Authorization") String tokenHeader,@RequestBody @Valid ApplicationDto applicationDto, @PathVariable long job_id){
+        String tokenCleaned = tokenService.replaceToken(tokenHeader);
+        long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
+        ResponseEntity response = verificarionMethods.verifyTokenInvalidUsernotFound(tokenHeader);
+        if (response!=null){return response;}
+        response = jobService.applyForJob(applicationDto, job_id, idUser);
+        if (response!=null) {
+            return response;
+        } else {
+            return ResponseEntity.status(500).body("Error");
         }
     }
 }

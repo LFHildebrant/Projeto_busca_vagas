@@ -31,6 +31,7 @@ public class JobSpecifications {
             return builder.like(builder.lower(root.get("company").get("name")), "%" + company + "%");
         };
     }
+
     public static Specification<Job> likeState(String state) {
         if  (state == null || state.trim().equals("")) {
             return null;
