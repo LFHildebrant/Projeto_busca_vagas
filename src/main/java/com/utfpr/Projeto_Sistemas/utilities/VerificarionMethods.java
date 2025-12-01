@@ -56,10 +56,8 @@ public class VerificarionMethods {
         }
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned)); //idUser from token
-        System.out.println("exists? " + userService.existsUserById(idUser));
         if (!userService.existsUserById(idUser)){
             if (!companyService.existsCompanyById(idUser)){
-                System.out.println("exists? " + userService.existsUserById(idUser));
                 return ResponseEntity.status(404).body(new ApiResponse("User not found"));
             }
         }

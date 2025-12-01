@@ -2,6 +2,7 @@ package com.utfpr.Projeto_Sistemas.controller;
 
 import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
+import com.utfpr.Projeto_Sistemas.dto.FeedbackDto;
 import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.dto.job.*;
 import com.utfpr.Projeto_Sistemas.dto.jobsearch.JobSearchDto;
@@ -120,13 +121,26 @@ public class JobController {
             return ResponseEntity.status(404).body(new ApiResponse("Job not found"));
         }
     }
-    @PostMapping("{job_id}")
+    @PostMapping("/{job_id}")
     ResponseEntity<?> applyForJob(@RequestHeader("Authorization") String tokenHeader,@RequestBody @Valid ApplicationDto applicationDto, @PathVariable long job_id){
         String tokenCleaned = tokenService.replaceToken(tokenHeader);
         long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
         ResponseEntity response = verificarionMethods.verifyTokenInvalidUsernotFound(tokenHeader);
         if (response!=null){return response;}
         response = jobService.applyForJob(applicationDto, job_id, idUser);
+        if (response!=null) {
+            return response;
+        } else {
+            return ResponseEntity.status(500).body("Error");
+        }
+    }
+    @PostMapping("/{job_id}/feedback")
+    ResponseEntity<?> sendFeedback(@RequestHeader("Authorization") String tokenHeader, @RequestBody @Valid FeedbackDto feedbackDto,  @PathVariable long job_id){
+        String tokenCleaned = tokenService.replaceToken(tokenHeader);
+        long idCompany = Long.parseLong(tokenService.validateToken(tokenCleaned));
+        ResponseEntity response = verificarionMethods.verifyTokenInvalid(tokenHeader);
+        if (response!=null){return response;}
+        response = jobService.sendFeedback(feedbackDto, idCompany, job_id);
         if (response!=null) {
             return response;
         } else {

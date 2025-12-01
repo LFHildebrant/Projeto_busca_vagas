@@ -4,6 +4,8 @@ import com.utfpr.Projeto_Sistemas.config.TokenService;
 import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
 import com.utfpr.Projeto_Sistemas.dto.user.CreateUserDto;
 import com.utfpr.Projeto_Sistemas.dto.user.UpdateUserDto;
+import com.utfpr.Projeto_Sistemas.repository.JobRepository;
+import com.utfpr.Projeto_Sistemas.service.JobService;
 import com.utfpr.Projeto_Sistemas.utilities.ApiResponse;
 import com.utfpr.Projeto_Sistemas.repository.UserRepositoy;
 import com.utfpr.Projeto_Sistemas.service.UserService;
@@ -28,13 +30,17 @@ public class UserController {
     private final UserRepositoy userRepositoy;
     private final TokenService tokenService;
     private final VerificarionMethods verificarionMethods;
+    private final JobRepository jobRepository;
+    private final JobService jobService;
 
     @Autowired
-    public UserController(UserService userService, UserRepositoy userRepositoy, TokenService tokenService, VerificarionMethods verificarionMethods) {
+    public UserController(UserService userService, UserRepositoy userRepositoy, TokenService tokenService, VerificarionMethods verificarionMethods, JobRepository jobRepository, JobService jobService) {
         this.userService = userService;
         this.userRepositoy = userRepositoy;
         this.tokenService = tokenService;
         this.verificarionMethods = verificarionMethods;
+        this.jobRepository = jobRepository;
+        this.jobService = jobService;
     }
 
     @PostMapping
@@ -102,6 +108,16 @@ public class UserController {
             return ResponseEntity.status(200).body(new ApiResponse("Deleted"));
         }
         return ResponseEntity.status(500).body("Error while deleting: ");
+    }
+
+    @GetMapping("/{user_id}/jobs")
+    public ResponseEntity<?>getJobs(@RequestHeader ("Authorization") String tokenHeader, @PathVariable int user_id){
+        String tokenCleaned = tokenService.replaceToken(tokenHeader);
+        //long idUser = Long.parseLong(tokenService.validateToken(tokenCleaned));
+        ResponseEntity response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, user_id);
+        if (response!=null){return response;}
+        return jobService.getApplicationsByUserId(user_id);
+        
     }
 
     @ExceptionHandler(SQLException.class)

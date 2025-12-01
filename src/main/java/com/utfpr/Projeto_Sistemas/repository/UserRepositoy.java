@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface UserRepositoy extends JpaRepository<User, Integer> {
 
     User findByUsername(String username);
-    User findByIdUser(Long idUser);
+    User findByIdUser(long idUser);
     Boolean existsByIdUser(Long idUser);
     Integer deleteUserByIdUser(Integer idUser);
 }

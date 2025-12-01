@@ -51,6 +51,8 @@ public class Application {
     @Column(name = "creation_time_stamp")
     private Instant creationTimeStamp;
 
+    private String feedback;
+
     public Application(Job job, User user, String name, String education, String experience, Instant creationTimeStamp) {
         this.job = job;
         this.user = user;
