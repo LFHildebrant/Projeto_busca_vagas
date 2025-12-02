@@ -1,6 +1,6 @@
 import { AuthService } from './authService.js';
 
-class LogoutView{
+export class LogoutView{
     constructor(){
         this.message = document.getElementById("message");
         this.logout = document.getElementById("logout");
@@ -26,4 +26,4 @@ class LogoutView{
     }
 }
 
-new LogoutView();
+

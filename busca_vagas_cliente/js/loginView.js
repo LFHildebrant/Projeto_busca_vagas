@@ -22,6 +22,7 @@ class LoginView{
                 
                 const userId = Config.getId(token);
                 const userRole = Config.getRole(token);
+                localStorage.setItem("role", userRole);
                 
                 localStorage.setItem("id", userId);
 

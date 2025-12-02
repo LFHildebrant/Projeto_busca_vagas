@@ -50,7 +50,7 @@ public class SecurityConfig  {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // pré-flight global
                         .requestMatchers("/user/**").hasRole("USER")  // private routes
                         .requestMatchers("/companies/**").hasRole("COMPANY")  // private routes
-
+                        .requestMatchers("/jobs/**").permitAll()
                         .anyRequest().authenticated()  // any other who needs authentication
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

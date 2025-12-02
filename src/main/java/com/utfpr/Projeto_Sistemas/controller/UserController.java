@@ -117,7 +117,7 @@ public class UserController {
         ResponseEntity response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, user_id);
         if (response!=null){return response;}
         return jobService.getApplicationsByUserId(user_id);
-        
+
     }
 
     @ExceptionHandler(SQLException.class)

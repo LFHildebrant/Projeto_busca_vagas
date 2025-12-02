@@ -5,6 +5,7 @@ import com.utfpr.Projeto_Sistemas.config.TokenWhitelist;
 import com.utfpr.Projeto_Sistemas.dto.FeedbackDto;
 import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.dto.job.*;
+import com.utfpr.Projeto_Sistemas.dto.jobsearch.FilterDto;
 import com.utfpr.Projeto_Sistemas.dto.jobsearch.JobSearchDto;
 import com.utfpr.Projeto_Sistemas.entities.Job;
 import com.utfpr.Projeto_Sistemas.service.CompanyService;
@@ -106,8 +107,11 @@ public class JobController {
             return response;
         }
         //List<Job> jobs = jobService.searchJobsWithSpecs(jobSearchDto.filters().getFirst());
-
-        List<JobDto> jobsSearchDtos = jobSearchDto.filters().stream() //split the various filters
+        List<FilterDto> filtersNotNull = jobSearchDto.filters();
+        if (filtersNotNull!=null && filtersNotNull.isEmpty()){
+            filtersNotNull = List.of(new FilterDto(null, null, null, null, null, null) );
+        }
+        List<JobDto> jobsSearchDtos = filtersNotNull.stream() //split the various filters
                 .map(filterDto -> jobService.searchJobsWithSpecs(filterDto)) //for each filter, does a sql, various jobs list
                 .flatMap(List::stream)//gather the jobs lists in just one
                 .distinct()

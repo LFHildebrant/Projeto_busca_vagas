@@ -6,6 +6,7 @@ import com.utfpr.Projeto_Sistemas.dto.company.CreateCompanyDto;
 import com.utfpr.Projeto_Sistemas.dto.company.UpdateCompanyDto;
 import com.utfpr.Projeto_Sistemas.dto.job.JobDto;
 import com.utfpr.Projeto_Sistemas.dto.job.JobsSearchDto;
+import com.utfpr.Projeto_Sistemas.dto.jobsearch.FilterDto;
 import com.utfpr.Projeto_Sistemas.dto.jobsearch.JobSearchDto;
 import com.utfpr.Projeto_Sistemas.dto.user.UserJobDto;
 import com.utfpr.Projeto_Sistemas.dto.user.UsersListByApplication;
@@ -58,7 +59,7 @@ public class CompanyController {
     @GetMapping("/{company_id}")
     public ResponseEntity<?> getCompany(@RequestHeader ("Authorization") String tokenHeader, @PathVariable int company_id){
         ResponseEntity<?> response = null;
-        response = verificarionMethods.verifyTokenInvalidForbiddenUsernotFound(tokenHeader, company_id);
+        response = verificarionMethods.verifyTokenInvalidForbiddenCompanynotFound(tokenHeader, company_id);
         if (response!=null){
             return response;
         }
@@ -106,10 +107,12 @@ public class CompanyController {
     @PostMapping("/{company_id}/jobs")
     public ResponseEntity<?> getAllJobsByCompanyIdWithFilter(@RequestHeader("Authorization") String tokenHeader ,@RequestBody @Valid JobSearchDto jobSearchDto, @PathVariable long company_id) {
         ResponseEntity<?> response = verificarionMethods.verifyTokenInvalidForbiddenCompanynotFound(tokenHeader, company_id);
-        if (response!=null){
-            return response;
+        if (response!=null){return response;}
+        List<FilterDto> filtersNotNull = jobSearchDto.filters();
+        if (filtersNotNull!=null && filtersNotNull.isEmpty()){
+            filtersNotNull = List.of(new FilterDto(null, null, null, null, null, null) );
         }
-        List<JobDto> jobsSearchDtos = jobSearchDto.filters().stream() //split the various filters
+        List<JobDto> jobsSearchDtos = filtersNotNull.stream() //split the various filters
                 .map(filterDto -> jobService.searchJobsByCompanyWithSpecs(filterDto, company_id)) //for each filter, does a sql, various jobs list
                 .flatMap(List::stream)//gather the jobs lists in just one
                 .distinct()

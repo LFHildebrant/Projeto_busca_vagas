@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-    <script type="module" src="js/logoutView.js" defer></script>
+    <script type="module" src="./js/user_js/userHomeView.js" defer></script>
     <title>Document</title>
 </head>
 <body>
@@ -19,6 +19,47 @@
         </div>
         <div>
             <a href="user_profile.html"><button id="showProfile">Ver perfil</button></a>
+        </div>
+    </div>
+    <div id="container">
+        <h2>Vagas</h2>
+        <form id="filtersForm">
+            <h2>Filtros</h2>
+
+            <div id="filtersContainer">
+
+                <div class="filter-group">
+
+                    <label>Title</label>
+                    <input type="text" class="input-title" name="title">
+
+                    <label>Area</label>
+                    <input type="text" class="input-area" name="area">
+
+                    <label>State</label>
+                    <input type="text" class="input-state" name="state">
+
+                    <label>City</label>
+                    <input type="text" class="input-city" name="city">
+
+                    <label>Salary Min</label>
+                    <input type="number" class="input-salary-min" name="salaryMin">
+
+                    <label>Salary Max</label>
+                    <input type="number" class="input-salary-max" name="salaryMax">
+                </div>
+
+            </div>
+
+            <button type="button" id="moreFilters">+ Adicionar
+                Filtro</button>
+            <br><br>
+
+            <button id="buttonSubmit" type="submit">Filtrar Vagas</button>
+        </form>
+        <div id="statusMessage"></div>
+
+        <div id="jobsContainer" class="jobs-grid">
         </div>
     </div>
 </body>
