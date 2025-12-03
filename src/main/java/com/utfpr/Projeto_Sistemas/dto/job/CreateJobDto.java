@@ -8,14 +8,14 @@ import java.math.BigDecimal;
 public record CreateJobDto(
 
         @NotBlank(message = "Title can not be empty")
-        @Size(min = 3, max = 150)
+        @Size(min = 3, max = 150 ,message = "must be between 3 and 150 characters")
         String title,
 
         @NotNull(message = "Area can not be empty")
         String area,
 
         @NotBlank(message = "Description can not be empty")
-        @Size(min = 10, max = 5000)
+        @Size(min = 10, max = 5000, message = "must be between 10 and 5000 characters")
         String description,
 
         @NotBlank(message = "State can not be empty")

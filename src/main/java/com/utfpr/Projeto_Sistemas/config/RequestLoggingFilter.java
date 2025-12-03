@@ -1,6 +1,8 @@
 package com.utfpr.Projeto_Sistemas.config;
 
+import com.utfpr.Projeto_Sistemas.utilities.ActiveUsersStore;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import jakarta.servlet.FilterChain;
@@ -24,7 +26,10 @@ import java.util.Collections;
     @Slf4j
     @Component
     @Order(1) // garante que roda antes do SecurityFilter
-    public class RequestLoggingFilter extends OncePerRequestFilter {
+    public class    RequestLoggingFilter extends OncePerRequestFilter {
+
+        @Autowired
+        private ActiveUsersStore activeUserStore;
 
         @Override
         protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -52,6 +57,11 @@ import java.util.Collections;
         }
 
         private void logHeaders(HttpServletRequest request) {
+            String ipAddress = request.getHeader("X-FORWARDED-FOR");
+            if (ipAddress == null) {
+                ipAddress = request.getRemoteAddr();
+            }
+            activeUserStore.putUserActivity(ipAddress);
             log.info("Headers:");
             for (String header : Collections.list(request.getHeaderNames())) {
                 log.info("  {}: {}", header, request.getHeader(header));

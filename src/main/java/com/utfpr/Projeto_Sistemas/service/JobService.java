@@ -125,11 +125,16 @@ public class JobService {
         List<UserJobDto> userJobDtos = listApp.stream()
                 .map(app -> new UserJobDto(
                         app.getUser().getIdUser(),
-                        app.getUser().getName(),
+                        /*app.getUser().getName(),
                         app.getUser().getEmail(),
                         app.getUser().getPhone(),
                         app.getUser().getExperience(),
-                        app.getUser().getEducation()
+                        app.getUser().getEducation()*/
+                        app.getName(),
+                        app.getEmail(),
+                        app.getPhone(),
+                        app.getExperience(),
+                        app.getEducation()
                 )).toList();
         return ResponseEntity.status(200).body(new UsersListByApplication(userJobDtos));
     }

@@ -4,18 +4,18 @@ class CompanyJobsView {
     constructor() {
         this.form = document.getElementById("filtersForm");
         this.btnAdd = document.getElementById("moreFilters");
-        
+
         this.filtersContainer = document.getElementById("filtersContainer");
 
         this.jobsContainer = document.getElementById("jobsContainer");
-        
+
         this.statusMsg = document.getElementById("statusMessage");
 
         this.btnAdd.addEventListener("click", () => this.addFilterHTML());
         this.form.addEventListener("submit", (e) => this.handleSubmit(e));
 
         const requestBody = {
-            filters: [] 
+            filters: []
         }
         this.getJobs(requestBody);
     }
@@ -45,7 +45,7 @@ class CompanyJobsView {
                 <input type="number" class="input-salary-max" name="salaryMax">
             </div>
         `;
-        
+
         this.filtersContainer.insertAdjacentHTML('beforeend', template);
     }
 
@@ -89,7 +89,7 @@ class CompanyJobsView {
     async getJobs(filters) {
         const jobService = new JobService();
         this.statusMsg.textContent = "Carregando vagas...";
-        
+
         this.jobsContainer.innerHTML = "";
 
         try {
@@ -124,7 +124,7 @@ class CompanyJobsView {
                 ? parseFloat(job.salary).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
                 : 'A combinar';
 
-            const jobId = job.id || job.job_id; 
+            const jobId = job.id || job.job_id;
 
             const htmlCard = `
                 <div class="card job-card">
@@ -137,7 +137,8 @@ class CompanyJobsView {
                             <p><strong>Local:</strong> ${job.city} - ${job.state}</p>
                             <p><strong>Salário:</strong> ${salarioFormatado}</p>
                             
-                            <a href="./jobs_html/job_details.html?id=${jobId}" class="btn-details">
+                            
+                            <a href="../jobs_html/job_details.html?id=${jobId}" class="btn-details">
                                 <button>Ver Detalhes</button>
                             </a>
                         </div>

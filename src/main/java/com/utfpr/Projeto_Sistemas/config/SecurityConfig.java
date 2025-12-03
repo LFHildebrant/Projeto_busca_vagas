@@ -51,6 +51,7 @@ public class SecurityConfig  {
                         .requestMatchers("/user/**").hasRole("USER")  // private routes
                         .requestMatchers("/companies/**").hasRole("COMPANY")  // private routes
                         .requestMatchers("/jobs/**").permitAll()
+                        .requestMatchers("/monitor").permitAll()
                         .anyRequest().authenticated()  // any other who needs authentication
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

@@ -27,9 +27,7 @@ class CreateUserView{
 
         fields.forEach(field => {
             const value = document.getElementById(field).value.trim();
-            if (value !== "") {
                 user[field] = value;
-            }
         });
 
         try{

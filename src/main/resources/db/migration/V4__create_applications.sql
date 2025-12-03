@@ -8,6 +8,6 @@ CREATE TABLE applications (
     education TEXT NOT NULL,
     experience TEXT NOT NULL,
     creation_time_stamp TIMESTAMP(6) DEFAULT CURRENT_TIMESTAMP(6),
-    FOREIGN KEY (user_id) REFERENCES users(id_user),
-    FOREIGN KEY (job_id) REFERENCES jobs(id_job)
+    FOREIGN KEY (user_id) REFERENCES users(id_user) ON DELETE CASCADE,
+    FOREIGN KEY (job_id) REFERENCES jobs(id_job) ON DELETE CASCADE
 );

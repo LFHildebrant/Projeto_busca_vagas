@@ -32,6 +32,9 @@ class CompanyHomeView {
     
                     <label>Area</label>
                     <input type="text" class="input-area" name="area">
+
+                    <label>Company</label>
+                    <input type="text" class="input-company" name="company">
     
                     <label>State</label>
                     <input type="text" class="input-state" name="state">
@@ -60,6 +63,7 @@ class CompanyHomeView {
 
             const title = group.querySelector('.input-title').value;
             const area = group.querySelector('.input-area').value;
+            const company = group.querySelector('.input-company').value;
             const state = group.querySelector('.input-state').value;
             const city = group.querySelector('.input-city').value;
             const min = group.querySelector('.input-salary-min').value;
@@ -68,6 +72,7 @@ class CompanyHomeView {
             const filterDto = {
                 title: title || null,
                 area: area || null,
+                company: company || null,
                 state: state || null,
                 city: city || null,
                 salary_range: (min || max) ? {
@@ -138,9 +143,7 @@ class CompanyHomeView {
                             <p><strong>Local:</strong> ${job.city} - ${job.state}</p>
                             <p><strong>Salário:</strong> ${salarioFormatado}</p>
                             
-                            <a href="./jobs_html/job_details.html?id=${jobId}" class="btn-details">
-                                <button>Ver Detalhes</button>
-                            </a>
+                            
                         </div>
                 `;
 

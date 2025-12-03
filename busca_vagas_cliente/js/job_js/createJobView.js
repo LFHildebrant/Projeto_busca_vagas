@@ -24,11 +24,15 @@ class CreateJobView{
 
             fields.forEach(field => {
                 const value = document.getElementById(field).value.trim();
+                
                 /*if (value !== "") {
                     user[field] = value;
                 }*/
             job[field] = value;
             });
+            if (job["salary"] === ""){
+                    job["salary"] = null;
+                }
 
             try{
                 console.log(job);

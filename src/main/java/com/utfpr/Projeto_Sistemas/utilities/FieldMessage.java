@@ -13,7 +13,7 @@ public class FieldMessage {
 
     private Integer Status;
     private String field;
-    private Object error;
+    //private Object error;
     private String message;
 
     public FieldMessage() {
